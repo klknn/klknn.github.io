@@ -1,0 +1,17 @@
+{{ define "title" }}
+{{- .Title -}}
+{{ end }}
+
+{{ define "main" }}
+{{ "<!-- _default/list.html start -->" | safeHTML }}
+
+<h1>posts</h1>
+
+<ul>
+{{ range .Pages -}}
+<li><a href="{{ .RelPermalink }}">{{ .Title }}</a> {{ .Date }}</li>
+{{ end -}}
+</ul>
+
+{{ "<!-- _default/list.html end -->" | safeHTML }}
+{{ end }}

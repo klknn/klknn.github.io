@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- TODO: depecated https://developer.mozilla.org/ja/docs/Web/CSS/@media/device-width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ block "title" . }}{{ end }}</title>
+    <style type="text/css">
+      table, th, td {
+	  border-collapse: collapse;
+	  border: 1px solid;
+	  line-height: 1.5;
+	  margin: 10px;
+	  padding: 10px;
+	  border-left: none;
+	  border-right: none;
+      }
+    </style>
+    <script>
+      MathJax = {
+	  tex: {
+	      tags: 'ams',
+	      inlineMath: [['$', '$'], ['\\(', '\\)']],
+	  }
+      };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+  </head>
+  <body>
+    {{ "<!-- _default/baseof.html start -->" | safeHTML }}
+
+      <a href="{{ relURL "/" }}">{{ .Site.Title }}</a> / 
+      <a href="{{ relURL "/posts/" }}">posts</a> /
+      <a href="{{ relURL "/tags/" }}">tags</a> /
+      <a href="{{ relURL "/about/" }}">about</a>
+
+    {{ block "main" . }}{{ end }}
+
+    {{ "<!-- _default/baseof.html end -->" | safeHTML }}
+
+    Copyright © {{ .Site.Params.Author }} All Rights Reserved.
+  </body>
+</html>
+

@@ -1,0 +1,71 @@
+#+title: Org-mode examples
+#+summary: org-mode usage in hugo.
+#+tags[]: hugo lang-en
+#+draft: false
+#+date: 2020-07-06T20:51:03+09:00
+#+isCJKLanguage: false
+#+markup: org
+#+toc: true
+
+this page shows how to use org-mode in hugo.
+see [[/posts/hello]] for markdown usage.
+
+* gist
+
+{{< gist spf13 7896402 >}}
+
+* footnote
+
+hello [fn:A] [fn:inline:this is the inline footnote https://orgmode.org/manual/Creating-Footnotes.html]
+
+test [fn:inline]
+
+[fn:A] image [[https://orgmode.org/img/org-mode-unicorn-logo.png]]
+
+* code block
+#+BEGIN_SRC python
+def f(x):
+	return x * x
+#+END_SRC
+
+* math
+\begin{align}
+\label{eq:sample}
+f(x) = x^2
+\end{align}
+
+* table
+
+#+NAME: tab:1
+#+CAPTION: caption for table 1.
+| aaaaaaaa | bb | c |
+|----------+----+---|
+|        1 |  2 | 3 |
+|        4 |  5 | 6 |
+
+
+Eq. \eqref{eq:sample} $x^2$
+
+a
+
+a
+
+a
+
+a
+
+a
+
+a
+
+a
+
+a
+
+a
+
+a
+
+
+Table [[tab:1]].
+

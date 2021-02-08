@@ -1,0 +1,19 @@
+#+title: Toyjvm in D
+#+summary:
+#+tags[]: lang-ja
+#+draft: true
+#+date: 2020-07-07T22:46:49+09:00
+#+isCJKLanguage: true
+#+markup: org
+#+toc: true
+
+How to write a (toy) JVM [fn:toyjvm:https://zserge.com/posts/jvm/] というやつをやってみた。
+
+[[https://github.com/klknn/djvm]]
+
+巨大なJVM仕様 [fn:jvmspec:https://docs.oracle.com/javase/specs/jvms/se14/html/jvms-4.html] を読むとっかかりになって面白い。よく考えるとJavaのような静的型のある言語で、動的なインタプリタ向けにもおもえるVMを採用しているのが気になる。
+
+最近ではjshellのような対話環境もあるし、以前JDK7では動的型言語へのサポートを充実させたinvokexxxといった命令が話題になった。 [fn:invokedynamic:https://www.oracle.com/technical-resources/articles/javase/dyntypelang.html] もしかするとWebサーバやORMマッパーではそういう動的な実行モデルが必要なのでしょうか??
+
+** D言語のメソッドとUFCSについて
+

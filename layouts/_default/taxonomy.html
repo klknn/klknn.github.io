@@ -1,0 +1,18 @@
+{{ define "title" }}
+{{- .Title -}}
+{{ end }}
+
+{{ define "main" }}
+{{ "<!-- _default/taxonomy.html start -->" | safeHTML }}
+{{ .Content }}
+
+<h1>tag: {{ .Title }}</h1>
+
+<ul>
+{{ range .Pages -}}
+<li><a href="{{ .RelPermalink }}">{{ .Title }}</a> ({{ .Date }}) {{ .Summary }}</li>
+{{ end -}}
+</ul>
+
+{{ "<!-- _default/taxonomy.html end -->" | safeHTML }}
+{{ end }}

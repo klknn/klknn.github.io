@@ -1,0 +1,18 @@
+{{ define "title" }}
+{{- .Title -}}
+{{ end }}
+
+{{ define "main" }}
+{{ "<!-- _default/terms.html start -->" | safeHTML }}
+{{ .Content }}
+
+<h1>tags</h1>
+
+<ul>
+  {{ range .Data.Terms.Alphabetical }}
+  <li><a href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a></li>
+  {{ end }}
+</ul>
+
+{{ "<!-- _default/terms.html end -->" | safeHTML }}
+{{ end }}

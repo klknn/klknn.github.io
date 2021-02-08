@@ -1,0 +1,135 @@
+#+title: Zig 入門
+#+summary:
+#+tags[]: zig lang-ja
+#+draft: false
+#+date: 2020-07-11T21:39:11+09:00
+#+isCJKLanguage: true
+#+markup: org
+#+toc: true
+
+最近システム系の言語として、Cコンパイラを内蔵したり話題になっている zig 言語。簡単なプログラムを書きながら入門しています。仕様はミニマルな感じですが、なかなかユニークな言語です。
+
+現時点で最新の0.6.0を想定。公式にドキュメントがない部分も多いので今後変わる可能性が高い。この辺は新参の言語ということで愛嬌だが、RustやD言語のようなレベルを想定すると驚く。ただ一貫した思想のあるミニマリストな言語なので意外となんとかなる。
+
+* 初期設定
+
+[[https://ziglang.org/download/][公式サイト]] からビルド済みバイナリをDLしてパスを通すだけ。CPUはx86と各種arm系、OSはlinuxにwindows、freebsdもあるすごい。
+
+#+begin_src bash
+wget https://ziglang.org/download/0.6.0/zig-linux-x86_64-0.6.0.tar.xz
+tar xvf zig-linux-x86_64-0.6.0.tar.xz
+export PATH=$(pwd)/zig-linux-x86_64-0.6.0:$PATH
+#+end_src
+
+同じページに [[https://ziglang.org/documentation/0.6.0][Language Reference]] と [[https://ziglang.org/documentation/0.6.0/std][Standard Library Documentation]] がある。これらと github のコードがほぼ全ての情報源である。とりあえず最初の Hello world くらいはやっとくと雰囲気つかめる。
+
+エディタがLSPに対応していれば [[https://github.com/zigtools/zls][zls]] をいれると定義元にジャンプしたりドキュメント読んだり、はかどります。 ~zig fmt~ というコマンドでフォーマットできるのですが、若干クセがあり、例えば構造体などの最後の要素に "," がないと一行にフォーマットされる挙動に最初戸惑いました。このへんの挙動は [[https://github.com/ziglang/zig/blob/d21a1922eb5d76b9b0d0611eaeb42c91f83234ab/std/zig/parser_test.zig][このテスト群]] を見ればわかります。
+
+* プロジェクト作成
+
+まずは簡単なプロジェクトの作成から。本稿の情報はまったくドキュメントがなく、全部 [[https://github.com/ziglang/zig/blob/0.6.0/lib/std/build.zig][build.zig]] を読んで得たもので、間違っているかもしれない。
+
+** プロジェクト雛形の作成
+
+#+begin_src bash
+mkdir foo
+cd foo
+zig init-exe
+#+end_src
+ライブラリを作るときは ~init-lib~
+
+これでこんなファイルが生成される
+#+begin_src c
+const Builder = @import("std").build.Builder;
+
+pub fn build(b: *Builder) void {
+    // Standard target options allows the person running `zig build` to choose
+    // what target to build for. Here we do not override the defaults, which
+    // means any target is allowed, and the default is native. Other options
+    // for restricting supported target set are available.
+    const target = b.standardTargetOptions(.{});
+
+    // Standard release options allow the person running `zig build` to select
+    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
+    const mode = b.standardReleaseOptions();
+
+    const exe = b.addExecutable("foo", "src/main.zig");
+    exe.setTarget(target);
+    exe.setBuildMode(mode);
+    exe.install();
+    const run_cmd = exe.run();
+    run_cmd.step.dependOn(b.getInstallStep());
+    const run_step = b.step("run", "Run the app");
+    run_step.dependOn(&run_cmd.step);
+}
+#+end_src
+
+** システムライブラリの追加
+
+たぶん普通のアプリをかくなら malloc とかで libc は必要。この辺、デフォルトで何もついてないのが真のシステム用言語という感じがしますね。
+#+begin_src c
+    const exe = b.addExecutable("foo", "src/main.zig");
+    exe.setTarget(target);
+    exe.setBuildMode(mode);
+    exe.linkSystemLibrary("c");  // -lc がビルドオプションに追加される
+#+end_src
+
+コマンドラインから ~zig build run~ で実行。
+
+
+* テスト作成
+
+** test ブロック
+
+D言語みたいにテスト用の構文がある。これはとても便利で、REPL的に使って言語の確認をしたり便利。
+#+begin_src c
+const std = @import("std");
+
+fn f() {
+    return 1;
+}
+
+test "f" {
+    std.debug.assert(f() == 1);
+}
+#+end_src
+
+** build.zig に テストの追加
+
+正直、これで良いのかわかっていませんが、動いている・ちゃんと失敗するのでとりあえず。
+#+begin_src c
+    const test_step = b.step("test", "Test the app");
+    const main_test = b.addTest("src/main.zig");
+    main_test.linkSystemLibrary("c");
+    test_step.dependOn(&main_test.step); // 同じように複数ファイル追加も可能
+#+end_src
+さっしの通り ~b.step(コマンド名, 説明)~ で定義したコマンドを ~zig build コマンド名~ で動かせるようだ。かなり汎用。
+
+
+* 余談
+
+** 良いと思った言語機能
+
+- 全部明示的に書く思想が読みやすい。dtorの代わりにdefer、例外の代わりにerror union、overloadなし、という潔さ。
+- 構文が簡単。[[https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.y][yaccで500行]]というミニマルさ。[[https://github.com/ruby/ruby/blob/v2_7_1/parse.y][Rubyのparse.y]]とかと比べるとすごい。
+- ~union(enum)~ タグ付きユニオンというやつ。システム系でよくあるパターンを楽に。
+- 値にできそうなものは全部値になってる。名前空間とか型情報とかも値。
+- いろんな構文が式で結果を返してくれるところ。短くかける。
+- 関数の引数が値か参照かはコンパイラが決める。デフォルトでimmutableだとこういうのがいい。
+- 言語機能のoptional型 ~?T~ 。ポインタのoptionalはポインタと同じサイズになるのも嬉しい。
+- 言語機能のerror union型。スタックトレースでるので実質例外だと思うけど、共有体として Eitherみたいな if/else や switch もできて文法的に便利。
+- 上に関連して ~!T~ や ~try~ 式で、明示的にerrorやoptional投げるところがわかる。。
+- ~defer~ D言語でいう ~scope(exit)~ で、初期化と最終化を並べてかける。
+- WASMをサポートしているところ。そのせいでallocatorとかに依存できない標準ライブラリが結構渋いが。
+- 多機能な async/await 構文がある。初見では、なぜここまで多機能なのかわからなかったが、coroutineをやりたいのだろうか。
+
+でも変なところもある、for 文が配列専用で、while文が従来のfor文みたいな役割になってるのは慣れない。[[https://ziglang.org/documentation/0.6.0/#Style-Guide][公式のコーディングスタイル]]も独特である(変数と名前空間はsnake_case、関数はcamelCase、型と型関数はTitleCase)。とはいえ慣れの問題といえばそう。
+
+
+** 今後
+
+勉強用に、とりあえず小さいJVMみたいなやつ書いてます。CIとかも設定してる。
+
+[[https://github.com/klknn/zigjvm]]
+
+今後、とりあえずCとの連携とか調べて、BLASとか数値計算用のライブラリでも作ろうかな。それかvector型があるのでそれを試すか。

@@ -1,0 +1,38 @@
+#+title: hugo の初期設定
+#+summary:
+#+tags[]: hugo lang-ja
+#+draft: false
+#+date: 2020-07-07T17:36:28+09:00
+#+isCJKLanguage: true
+#+markup: org
+#+toc: true
+
+hugo [fn:HUGO:https://gohugo.io/] を始めた。これまでhatenaとかwordpress使ってきたけど、毎回使い勝手が変わってたり忘れてたりする。hugoならmarkdownやorg-modeでかけるので忘れることはないし、自分で全部管理する感じが良い。
+
+いまどきブログなんて流行らないだろうけど、逆に今時cssもほとんどないサイトって懐かしくていいなと。たまたまHTMLだけのすごくシンプルな雛形 [fn:HUGOTHEME] を見ながら書きました。唯一 ~<table>~ タグだけイマイチなのでcss書いた。とりあえず数行の css と js なので全部 [[https://github.com/klknn/klknn.github.io/blob/6d58363642f64cc775b023eb1b79e06734407828/layouts/_default/baseof.html#L6-L28][layouts/_default/baseof.html]] に突っ込んでいます。こういうので良いと思い始めた。真似したい人は layouts 以下をまるごとコピーして config.toml の中身
+#+begin_src toml
+baseURL = "https://klknn.github.io/"
+languageCode = "ja"
+title = "klknn log"
+
+[params]
+  author = "klknn"
+  editURL = "https://github.com/klknn/klknn.github.io/edit/develop/content"
+#+end_src
+を適宜かきかえると良いです。ちなみに書いてある author をテンプレート html 内でアクセスしたいときは
+~{{ .Site.Params.Author }}~
+で取得できます(org, mdではできない?)。ハードコードしたくない値は全部 config.toml にぶち込む運用です。
+
+ちなみに手元のPC (192.168.0.13) で編集中のサイトを、同じネットワーク上のスマホから見るには以下のようにhugo起動して、スマホから http://192.168.0.13:1313 を表示します
+#+begin_src bash
+hugo serve -D --bind 192.168.0.13 --baseURL=http://192.168.0.13
+#+end_src
+とくにcssもないし、とくにレスポンシブでもないので醜いですが。とりあえずGoogleのブログ [fn:GOOGLE:https://developers.google.com/web/fundamentals/design-and-ux/responsive?hl=ja] にあった
+#+begin_src html
+<meta name="viewport" content="width=device-width, initial-scale=1">
+#+end_src
+は入れておいたので多少マシかと思いますが、深追いしないでおこうと思います。
+
+今後、とりあえずgithubにホストしているので何かコード書くときとかについでにチラシの裏的なことを書こうかと。
+
+[fn:HUGOTHEME] Hugoで1からテーマを作ってGitHub Pagesにデプロイする https://www.membersedge.co.jp/blog/create-hugo-theme-and-deploy-to-github-pages/

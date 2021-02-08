@@ -1,0 +1,25 @@
+{{ define "title" }}
+{{- .Title -}}
+{{ end }}
+
+{{ define "main" }}
+{{ "<!-- _default/single.html start -->" | safeHTML }}
+
+<h2>{{- .Title -}}</h2>
+<ul>
+date: {{ .Date }} <a href="{{ .Site.Params.EditURL }}/{{ .File }}">edit</a>
+</ul>
+<ul>
+tags: {{ range .Params.tags -}}
+  <a href="{{ print "/tags/" . | relURL }}/">{{ . }}</a>
+{{ end -}}
+</ul>
+<ul>
+toc:
+{{.TableOfContents}}
+</ul>
+
+{{ .Content }}
+
+{{ "<!-- _default/single.html end -->" | safeHTML }}
+{{ end }}
