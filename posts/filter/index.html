@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Filterについて</title><style type=text/css>table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;margin:10px;padding:10px;border-left:none;border-right:none}</style><script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']],}};</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script></head><body><a href=/>klknn log</a> /
+<a href=/posts/>posts</a> /
+<a href=/tags/>tags</a> /
+<a href=/about/>about</a><h2>Filterについて</h2><ul>date: 2021-02-22 23:24:12 +0900 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/filter.md>edit</a></ul><ul>tags: <a href=/tags/dsp/>dsp</a>
+<a href=/tags/lang-ja/>lang-ja</a></ul><ul>toc:<nav id=TableOfContents><ul><li><a href=#デジタルフィルタの定義>デジタルフィルタの定義</a></li><li><a href=#butterworth>Butterworth</a><ul><li><a href=#low-pass-filter-lpf-6db>Low Pass Filter (LPF) 6db</a></li><li><a href=#low-pass-filter-lpf-12db>Low Pass Filter (LPF) 12db</a></li><li><a href=#high-pass-filter-hpf-12db>High Pass Filter (HPF) 12db</a></li><li><a href=#band-pass-filter-bpf-12db>Band Pass Filter (BPF) 12db</a></li></ul></li><li><a href=#メモ>メモ</a></li></ul></nav></ul><p><a href=https://github.com/klknn/synth2/commit/e8ee1bc4a237c5b2c5c388d2fab7a3fb1977c26a>自作シンセにLPFを実装したとき</a> の備忘録。私は大学生のころに、制御理論や複素解析もやっていたのですが、その辺の予備知識ないと理解できないと思う。</p><p>記号のリスト</p><ul><li>$j$: 虚数</li><li>$\omega$: 各周波数。周波数 (Hz) に $2\pi$ をかけたもの</li><li>$T$: サンプリング周期</li><li>$\omega_0$: カットオフ周波数</li><li>$Q$: レゾナンス (Quality Factorとも呼ぶ) $Q = \sqrt{1/2}$ 以上で、 $\omega_0$ にピークが立つ</li><li>$x(n)$: 時刻 $n$ におけるフィルタの入力サンプル</li><li>$y(n)$: 時刻 $n$ におけるフィルタの出力サンプル</li><li>$a_i$: i時刻前の出力にかかるフィルタ係数(これをIIRフィルタと呼ぶ)</li><li>$b_i$: i時刻前の入力にかかるフィルタ係数(これをFIRフィルタと呼ぶ)</li></ul><h2 id=デジタルフィルタの定義>デジタルフィルタの定義</h2><p>一般的なフルIIRフィルタ (IIRおよびFIRフィルタも含む) は時間ドメインでは以下の形をしている
+\begin{align}
+y(n) = \sum_{i=0}^{B} b_i x(n - i) - \sum_{j=1}^{A} a_j y(n - j)
+\end{align}
+これをZ変換 (回路理論で用いられるフーリエ変換の仲間)した入出力比を伝達関数(transfer function)と呼ぶ:
+\begin{align}
+H(z) = \frac{Y(z)}{X(z)} = \sum_{i=0}^{B} b_i z^{-i} - H(z) \sum_{j=1}^{A} a_j z^{-j} = \frac{\sum_{i=0}^{B} b_i z^{-i}}{1 + \sum_{j=1}^{A} a_j z^{-j}}
+\end{align}
+ここで次のような bilinear 変換によりラプラスドメインの伝達関数 $H(s)$ にできる:
+\begin{align}
+s &= \frac{2}{T} \frac{z-1}{z+1}, \newline
+z &= \frac{2 + sT}{2 - sT},
+\end{align}
+なお $s = j \omega$ であり $|H(j \omega)|$ が周波数ごとの amplitude (db/octの傾きとかわかる), $\angle{H(j \omega)}$ が周波数ごとの位相応答 (線形位相かなどわかる) を表す関数となる。</p><h2 id=butterworth>Butterworth</h2><p>というフィルタが音響処理では普及している。他のフィルタと比べてカットオフ周波数のロールオフが緩やかという性質がある。以下にラプラス領域での定義を示す。Z変換した値は数式記号処理ソフトを使って式 (3) を代入するか、以下の本の 8.10 節で確認すると良い</p><blockquote><p>Sean Luke, 2019, Computational Music Synthesis, zeroth edition, available for free at <a href=http://cs.gmu.edu/~sean/book/synthesis/>http://cs.gmu.edu/~sean/book/synthesis/</a></p></blockquote><p>より一般的な Butterworth フィルタについてはこの PDF が詳しい</p><blockquote><p>Vadim Zavalishin, The Art of VA Filter Design <a href=https://www.discodsp.net/VAFilterDesign_2.1.0.pdf>https://www.discodsp.net/VAFilterDesign_2.1.0.pdf</a></p></blockquote><h3 id=low-pass-filter-lpf-6db>Low Pass Filter (LPF) 6db</h3><p>1 pole (分母 = 0の方程式が1つの解をもつ) で 6db/octave で高域が減衰する。</p><p>\begin{align}
+H(s) = \frac{1}{s + 1}
+\end{align}</p><h3 id=low-pass-filter-lpf-12db>Low Pass Filter (LPF) 12db</h3><p>2 pole (分母 = 0の方程式が2つの解をもつ) で 12db/octave で高域が減衰する。</p><p>\begin{align}
+H(s) = \frac{1}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
+\end{align}</p><h3 id=high-pass-filter-hpf-12db>High Pass Filter (HPF) 12db</h3><p>上に同じ性質をもつが逆に低域が減衰する。</p><p>\begin{align}
+H(s) = \frac{\frac{s^2}{\omega_0^2}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
+\end{align}</p><h3 id=band-pass-filter-bpf-12db>Band Pass Filter (BPF) 12db</h3><p>上に同じ性質を持つが高域と低域の両方が減衰する。</p><p>\begin{align}
+H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
+\end{align}</p><h2 id=メモ>メモ</h2><ul><li>上記のフィルタは全周波数で均等に位相を変化させるので線形位相フィルタとよばれる</li><li>1-pole フィルタはレゾナンスをもたない</li><li>全く周波数を変化しない代わりに周波数ごとの位相を変える All Pass Filterというものがある。周波数ごとに音の遅れ方を変えたいリバーブなどで使う</li></ul><p>私にはまだN-poleのLPFとかがどういう形なのか完全に理解できてない。疑問として、たとえば2-pole のフィルタを 2回かけたら 4-pole になるのだろうか (3-poleは1+2-poleなのだろうか) ？poleの数とdb/octの関係からそんな気がする。おそらく実際に2回フィルタを畳みこむ必要はなく、ラプラス(とZ)変換では単に伝達関数を二乗すればよいので楽できそう(The Art of VA Filter Design の 10.5 読んだ感じそう思える)。</p>Copyright © klknn All Rights Reserved.</body></html>
