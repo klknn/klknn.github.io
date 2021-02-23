@@ -51,7 +51,7 @@ z &= \frac{2 + sT}{2 - sT},
 
 > Vadim Zavalishin, The Art of VA Filter Design https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_2.1.0.pdf
 
-つぎに実際に使われる定義を見ていく
+この辺の話は VA Filter Design の2章がよくまとまっている。それでは実際に使われるLPF/HPF/BPFを導出する。
 
 ## 1-pole Low Pass Filter (LPF) 6db/oct
 
@@ -76,91 +76,14 @@ H(s) = \frac{1}{\frac{s}{\omega_0} + 1}
 
 この式は 1 pole (分母 = 0の方程式が1つの解をもつ) であり、倍の周波数(1 octave上) で0.5倍の音量つまりデシベル(db)でいうと $20 \log_{10} 0.5 \approx -6$ db/octave で高域が減衰するという。
 
-### 離散信号への適用
-
-得られたラプラス領域の伝達関数を冒頭の式(2), (3)を用いたZ変換することで、デジタルフィルタの定義 ($a_t$ と $b_t$ の値) が得られる。手計算してもいいがしんどいので面倒なことはPython (の数式処理ライブラリであるSymPy) に頼ろう。
-
-[filter_coeff.py](/filter_coeff.py)
-```python
-# requires version '1.7.1
-from sympy import *
-
-s = Symbol('s')
-z = Symbol('z')
-Q = Symbol('Q')    # resonance
-T = Symbol('T')    # sampling interval
-w0 = Symbol('w0')  # cutoff freq
-
-# z2s = 2 / T * (z - 1) / (z + 1)
-s2z = 2 / T * (z - 1) / (z + 1)
-
-def print_coeff(hs):
-    hz = simplify(hs.subs(s, s2z))  # Z transform
-    npole = degree(denom(hs), s)
-    print("=== Transfer function ===")
-    print("H(s) =", hs)  # transfer function in Laplace domain
-    print("H(z) =", hz)  # transfer function in Z domain
-    print("#pole =", npole)
-    print("=== Filter coeffients ===")
-    # FIR coeff
-    dhz = collect(expand(denom(hz) * z ** -npole), z)
-    nhz = collect(expand(numer(hz) * z ** -npole), z)
-    a0 = dhz.coeff(z, 0)  # to normalize a0 = 1
-    for i in range(npole + 1):
-        print(f"b{i} =", nhz.coeff(z, -i) / a0)
-    # IIR coeff
-    for i in range(1, npole + 1):
-        print(f"a{i} =", dhz.coeff(z, -i) / a0)
-
-
-print("Filter: 1-pole LPF")
-print_coeff(hs = 1 / (s / w0 + 1))
-print()
-print("Filter: 1-pole HPF")
-print_coeff(hs = s / (s + w0))
-print()
-print("Filter: 2-pole LPF")
-print_coeff(hs = w0**2 / (s**2 + s * w0 * Q + w0**2))
-print()
-print("Filter: 2-pole HPF")
-print_coeff(hs = (s**2 / w0**2) / (s**2 + s * w0 * Q + w0**2))
-```
-ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった...天才かもしれない(sympyがすごいだけである)。ちなみにsympyのインストールが面倒ならGoogle colabとかから試せると思う。
-
-このフィルタの結果は以下の通り
-```
-Filter: 1-pole LPF
-=== Transfer function ===
-H(s) = 1/(s/w0 + 1)
-H(z) = T*w0*(z + 1)/(T*w0*(z + 1) + 2*z - 2)
-#pole = 1
-=== Filter coeffients ===
-b0 = T*w0/(T*w0 + 2)
-b1 = T*w0/(T*w0 + 2)
-a1 = (T*w0 - 2)/(T*w0 + 2)
-```
-この辺の話は VA Filter Design の2章が詳しい。
-
 ## 1-pole High Pass Filter (HPF) 6db/oct
 
 LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
 \begin{align}
 H(s) = \frac{\frac{s}{\omega_0}}{\frac{s}{\omega_0} + 1}
 \end{align}
-上記のプログラムの `hs` を変更すると、結果は以下の通り
-```
-Filter: 1-pole HPF
-=== Transfer function ===
-H(s) = s/(s + w0)
-H(z) = 2*(z - 1)/(T*w0*(z + 1) + 2*z - 2)
-#pole = 1
-=== Filter coeffients ===
-b0 = 2/(T*w0 + 2)
-b1 = -2/(T*w0 + 2)
-a1 = (T*w0 - 2)/(T*w0 + 2)
-```
 
-## Low Pass Filter (LPF) 12db
+## 2-pole Low Pass Filter (LPF) 12db/oct
 
 単純に1-pole LPFを二回かけると 2 pole (分母 = 0の方程式が2つの解をもつ) で 12db/octave で高域が減衰するLPFになる。フィルタは畳み込みなので、そのラプラス変換は積つまり、もとのLPFの二乗になる。
 
@@ -170,22 +93,7 @@ H(s) = \frac{1}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
 \end{align}
 TODO: なぜ Q でピークがたつかの説明 (天下り的に周波数応答みればよいが、直感的な説明があるとよい)。詳細はVA Filter Designの 4.2 Resonanceを読むとよい。
 
-プログラムの結果は以下の通り
-```
-=== Transfer function ===
-H(s) = w0**2/(Q*s*w0 + s**2 + w0**2)
-H(z) = T**2*w0**2*(z + 1)**2/(2*Q*T*w0*(z - 1)*(z + 1) + T**2*w0**2*(z + 1)**2 + 4*(z - 1)**2)
-#pole = 2
-=== Filter coeffients ===
-b0 = T**2*w0**2/(2*Q*T*w0 + T**2*w0**2 + 4)
-b1 = 2*T**2*w0**2/(2*Q*T*w0 + T**2*w0**2 + 4)
-b2 = T**2*w0**2/(2*Q*T*w0 + T**2*w0**2 + 4)
-a1 = (2*T**2*w0**2 - 8)/(2*Q*T*w0 + T**2*w0**2 + 4)
-a2 = (-2*Q*T*w0 + T**2*w0**2 + 4)/(2*Q*T*w0 + T**2*w0**2 + 4)
-```
-ぱっと見、CMS 8.10の結果と一致してる気がする。
-
-## High Pass Filter (HPF) 12db
+## 2-pole High Pass Filter (HPF) 12db/oct
 
 上に同じ性質をもつが逆に低域が減衰する。
 
@@ -193,22 +101,7 @@ a2 = (-2*Q*T*w0 + T**2*w0**2 + 4)/(2*Q*T*w0 + T**2*w0**2 + 4)
 H(s) = \frac{\frac{s^2}{\omega_0^2}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
 \end{align}
 
-```
-Filter: 2-pole HPF
-=== Transfer function ===
-H(s) = s**2/(w0**2*(Q*s*w0 + s**2 + w0**2))
-H(z) = 4*(z - 1)**2/(w0**2*(2*Q*T*w0*(z - 1)*(z + 1) + T**2*w0**2*(z + 1)**2 + 4*(z - 1)**2))
-#pole = 2
-=== Filter coeffients ===
-b0 = 4/(2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)
-b1 = -8/(2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)
-b2 = 4/(2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)
-a1 = (2*T**2*w0**4 - 8*w0**2)/(2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)
-a2 = (-2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)/(2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)
-```
-
-
-## Band Pass Filter (BPF) 12db
+## 2-pole Band Pass Filter (BPF) 12db/oct
 
 上に同じ性質を持つが高域と低域の両方が減衰する。
 
@@ -216,18 +109,17 @@ a2 = (-2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)/(2*Q*T*w0**3 + T**2*w0**4 + 4*w0**2)
 H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
 \end{align}
 
-```
-=== Transfer function ===
-H(s) = s/(Q*w0*(Q*s*w0 + s**2 + w0**2))
-H(z) = 2*T*(z - 1)*(z + 1)/(Q*w0*(2*Q*T*w0*(z - 1)*(z + 1) + T**2*w0**2*(z + 1)**2 + 4*(z - 1)**2))
-#pole = 2
-=== Filter coeffients ===
-b0 = 2*T/(2*Q**2*T*w0**2 + Q*T**2*w0**3 + 4*Q*w0)
-b1 = 0
-b2 = -2*T/(2*Q**2*T*w0**2 + Q*T**2*w0**3 + 4*Q*w0)
-a1 = (2*Q*T**2*w0**3 - 8*Q*w0)/(2*Q**2*T*w0**2 + Q*T**2*w0**3 + 4*Q*w0)
-a2 = (-2*Q**2*T*w0**2 + Q*T**2*w0**3 + 4*Q*w0)/(2*Q**2*T*w0**2 + Q*T**2*w0**3 + 4*Q*w0)
-```
+## 具体的なフィルタ係数の導出 (pythonによる自動導出)
+
+得られたラプラス領域の伝達関数を冒頭の式(2), (3)を用いたZ変換することで、実装に必要なデジタルフィルタの係数 $a_t$ と $b_t$ が得られる。1-poleくらいなら手計算してもいいが、2-poleになるとしんどいので面倒なことはPython (の数式処理ライブラリであるSymPy) にやらせよう。
+
+コード [filter_coeff.py](/filter_coeff.py)
+{{< render-code file="/static/filter_coeff.py" language="py" >}}
+
+結果 [filter_coeff.txt](/filter_coeff.txt)
+{{< render-code file="/static/filter_coeff.txt" language="txt" >}}
+
+ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった...天才かもしれない(sympyがすごいだけである)。ちなみにsympyのインストールが面倒ならGoogle colabとかから試せると思う。
 
 ## メモ・疑問
 
