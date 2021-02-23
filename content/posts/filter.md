@@ -47,9 +47,9 @@ z &= \frac{2 + sT}{2 - sT},
 
 > Sean Luke, 2019, Computational Music Synthesis, zeroth edition, available for free at http://cs.gmu.edu/~sean/book/synthesis/ 
 
-より一般的な Butterworth フィルタについてはこの PDF が詳しい
+より一般的な Butterworth フィルタについてはこの PDF が詳しい (余談だが、著者はNIのMassiveやReaktorの開発者らしい [linkedin](https://www.linkedin.com/in/vadim-zavalishin-451bb812b))
 
-> Vadim Zavalishin, The Art of VA Filter Design https://www.discodsp.net/VAFilterDesign_2.1.0.pdf
+> Vadim Zavalishin, The Art of VA Filter Design https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_2.1.0.pdf
 
 つぎに実際の定義を見ていく
 
