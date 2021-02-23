@@ -143,7 +143,7 @@ a1 = (T*w0 - 2)/(T*w0 + 2)
 
 ## 1-pole High Pass Filter (HPF) 6db/oct
 
-LPFと同じような雰囲気で、こういう伝達関数を使う
+LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
 \begin{align}
 H(s) = \frac{\frac{s}{\omega_0}}{\frac{s}{\omega_0} + 1}
 \end{align}
