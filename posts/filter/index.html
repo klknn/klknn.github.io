@@ -83,7 +83,7 @@ H(z) = T*w0*(z + 1)/(T*w0*(z + 1) + 2*z - 2)
 b0 = T*w0/(T*w0 + 2)
 b1 = T*w0/(T*w0 + 2)
 a1 = (T*w0 - 2)/(T*w0 + 2)
-</code></pre><p>この辺の話は VA Filter Design の2章が詳しい。</p><h2 id=1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</h2><p>LPFと同じような雰囲気で、こういう伝達関数を使う
+</code></pre><p>この辺の話は VA Filter Design の2章が詳しい。</p><h2 id=1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</h2><p>LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
 \begin{align}
 H(s) = \frac{\frac{s}{\omega_0}}{\frac{s}{\omega_0} + 1}
 \end{align}
