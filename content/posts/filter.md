@@ -3,6 +3,7 @@ title: "デジタルフィルタの実装"
 date: 2021-02-22T23:24:12+09:00
 draft: false
 tags: ["dsp", "lang-ja"]
+isCJKLanguage: true
 ---
 
 [自作シンセにLPFを実装したとき](https://github.com/klknn/synth2/commit/e8ee1bc4a237c5b2c5c388d2fab7a3fb1977c26a) の備忘録。私は大学生のころに、制御理論や複素解析もやっていたのですが、その辺の予備知識ないと理解できないと思う。
@@ -45,7 +46,7 @@ z &= \frac{2 + sT}{2 - sT},
 
 というフィルタが音響処理では普及している。他のフィルタと比べてカットオフ周波数のロールオフが緩やかでカットオフ後に荒ぶらない性質がある。アナログ回路に基づいているので多くの場合はラプラス領域での伝達関数が示される。デジタルフィルタとして実装する場合に必要である、Z変換した伝達関数は数式記号処理ソフトを使って式 (3) を代入すると得られる。後述する実験結果か、以下の本の 8.10 節でも確認できる
 
-> Sean Luke, 2019, Computational Music Synthesis, zeroth edition, available for free at http://cs.gmu.edu/~sean/book/synthesis/ 
+> Sean Luke, 2019, Computational Music Synthesis, zeroth edition, available for free at http://cs.gmu.edu/~sean/book/synthesis/
 
 より一般的な Butterworth フィルタについてはこの PDF が詳しい (余談だが、著者はNIのMassiveやReaktorの開発者らしい [linkedin](https://www.linkedin.com/in/vadim-zavalishin-451bb812b))
 

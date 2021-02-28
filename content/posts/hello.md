@@ -3,6 +3,7 @@ title: "Markdown examples"
 date: 2020-07-07T14:24:12+09:00
 draft: false
 tags: ["hugo", "lang-en"]
+isCJKLanguage: false
 ---
 
 ## footnote
