@@ -7,7 +7,7 @@
 
 <h2>{{- .Title -}}</h2>
 <ul>
-date: {{ .Date }} <a href="{{ .Site.Params.EditURL }}/{{ .File }}">edit</a>
+date: {{ .Date.Format "2006-01-02 15:04:05 MST" }} <a href="{{ .Site.Params.EditURL }}/{{ .File }}">edit</a>
 </ul>
 <ul>
 tags: {{ range .Params.tags -}}

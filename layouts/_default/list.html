@@ -9,7 +9,7 @@
 
 <ul>
 {{ range .Pages -}}
-<li><a href="{{ .RelPermalink }}">{{ .Title }}</a> {{ .Date }}</li>
+<li><a href="{{ .RelPermalink }}">{{ .Title }}</a> {{ .Date.Format "2006-01-02 15:04:05 MST" }}</li>
 {{ end -}}
 </ul>
 
