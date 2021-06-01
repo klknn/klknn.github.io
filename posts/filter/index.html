@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>デジタルフィルタの実装</title><style type=text/css>table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;margin:10px;padding:10px;border-left:none;border-right:none}</style><script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']],}};</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script></head><body><a href=/>klknn log</a> /
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>デジタルフィルタの実装</title><style type=text/css>table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;margin:10px;padding:10px;border-left:none;border-right:none}</style><script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']]}}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script></head><body><a href=/>klknn log</a> /
 <a href=/posts/>posts</a> /
 <a href=/tags/>tags</a> /
 <a href=/about/>about</a><h2>デジタルフィルタの実装</h2><ul>date: 2021-02-22 23:24:12 +0900 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/filter.md>edit</a></ul><ul>tags: <a href=/tags/dsp/>dsp</a>
@@ -29,7 +29,7 @@ z &= \frac{2 + sT}{2 - sT},
 \begin{align}
 H(s) &= \frac{1}{s + 1}.
 \end{align}
-さらに $s = s&rsquo; / \omega_0$ を代入することで、対数スケールで周波数を左右に平行移動できる。これは仮定のない一般的な方法なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
+さらに $s = s' / \omega_0$ を代入することで、対数スケールで周波数を左右に平行移動できる。これは仮定のない一般的な方法なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
 \begin{align}
 H(s) = \frac{1}{\frac{s}{\omega_0} + 1}
 \end{align}</p><p>この式は 1 pole (分母 = 0の方程式が1つの解をもつ) であり、倍の周波数(1 octave上) で0.5倍の音量つまりデシベル(db)でいうと $20 \log_{10} 0.5 \approx -6$ db/octave で高域が減衰するという。</p><h2 id=1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</h2><p>LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
