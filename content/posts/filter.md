@@ -6,7 +6,7 @@ tags: ["dsp", "lang-ja"]
 isCJKLanguage: true
 ---
 
-[自作シンセにLPFを実装したとき](https://github.com/klknn/synth2/commit/e8ee1bc4a237c5b2c5c388d2fab7a3fb1977c26a) の備忘録。私は大学生のころに、制御理論や複素解析もやっていたのですが、その辺の予備知識ないと理解できないと思う。
+[自作シンセにLPFを実装したとき](https://github.com/klknn/synth2/commit/e8ee1bc4a237c5b2c5c388d2fab7a3fb1977c26a) の備忘録。
 
 記号のリスト
 
