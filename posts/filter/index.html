@@ -30,11 +30,11 @@ s &= \frac{2}{T} \frac{z-1}{z+1}, \newline
 \begin{align}
 |H(j\omega)| &= \frac{1}{w + 1},
 \end{align}
-とすれば周波数0では元の音量のまま、他では倍の周波数では半分の音量になる。この周波数応答をもつラプラス領域での伝達関数には以下のものが考えられる
+とすれば周波数0では元の音量となるよう、先の関数を周波数 $w$ 軸に平行移動して音量が半減してゆく。ここまでは絶対値で議論してきたが、この性質をもつラプラス領域での伝達関数には以下のものが考えられる
 \begin{align}
 H(s) &= \frac{1}{s + 1}.
 \end{align}
-さらに $s = s' / \omega_0$ を代入することで、対数スケールで周波数を左右に平行移動できる。これは仮定のない一般的な方法なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
+さらに $s = s' / \omega_0$ を代入することで、今度は対数スケールで周波数軸を左右に平行移動できる。これは単なる変数変換なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
 \begin{align}
 H(s) = \frac{1}{\frac{s}{\omega_0} + 1}
 \end{align}</p><p>この式は 1 pole (分母 = 0の方程式が1つの解をもつ) であり、倍の周波数(1 octave上) で0.5倍の音量つまりデシベル(db)でいうと $20 \log_{10} 0.5 \approx -6$ db/octave で高域が減衰するという。</p><h3 id=1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</h3><p>LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
@@ -44,7 +44,7 @@ H(s) = \frac{\frac{s}{\omega_0}}{\frac{s}{\omega_0} + 1}
 \begin{align}
 H(s) = \frac{1}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
 \end{align}
-TODO: なぜ Q でピークがたつかの説明 (天下り的に周波数応答みればよいが、直感的な説明があるとよい)。詳細はVA Filter Designの 4.2 Resonanceを読むとよい。</p><h3 id=2-pole-high-pass-filter-hpf-12dboct>2-pole High Pass Filter (HPF) 12db/oct</h3><p>上に同じ性質をもつが逆に低域が減衰する。</p><p>\begin{align}
+TODO: なぜ Q でピークがたつかの説明 (天下り的に周波数応答みればよいが、直感的な説明があるとよい)。気になる人は VA Filter Designの 4.2 Resonanceを読むとよい。</p><h3 id=2-pole-high-pass-filter-hpf-12dboct>2-pole High Pass Filter (HPF) 12db/oct</h3><p>上に同じ性質をもつが逆に低域が減衰する。</p><p>\begin{align}
 H(s) = \frac{\frac{s^2}{\omega_0^2}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
 \end{align}</p><h3 id=2-pole-band-pass-filter-bpf-12dboct>2-pole Band Pass Filter (BPF) 12db/oct</h3><p>上に同じ性質を持つが高域と低域の両方が減衰する。</p><p>\begin{align}
 H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
