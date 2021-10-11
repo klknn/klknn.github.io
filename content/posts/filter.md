@@ -137,7 +137,7 @@ H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q}
 結果 [filter_coeff.txt](/filter_coeff.txt)
 {{< render-code file="/static/filter_coeff.txt" language="txt" >}}
 
-ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった...天才かもしれない(sympyがすごいだけである)。ちなみにsympyのインストールが面倒ならGoogle colabとかから試せると思う。
+ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった...。ちなみに古いバージョンのsympyでやるとうまくいかないので注意。
 
 ## メモ・疑問
 
