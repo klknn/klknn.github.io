@@ -1,12 +1,103 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Zig 入門</title><style type=text/css>@media(prefers-color-scheme:dark){body{background-color:#222;color:#ddd}a:link{color:#88c}a:visited{color:#bbc}a:hover{color:#f88}a:active{color:#f80}}p{max-width:50em;margin:1em}table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;margin:10px;padding:10px;border-left:none;border-right:none}</style><script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']]}}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script></head><body><a href=/>klknn log</a> /
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Zig 入門</title>
+<style type=text/css>@media(prefers-color-scheme:dark){body{background-color:#222;color:#ddd}a:link{color:#88c}a:visited{color:#bbc}a:hover{color:#f88}a:active{color:#f80}}p{max-width:50em;margin:1em}table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;margin:10px;padding:10px;border-left:none;border-right:none}</style>
+<script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script>
+</head>
+<body>
+<a href=/>klknn log</a> /
 <a href=/posts/>posts</a> /
 <a href=/tags/>tags</a> /
-<a href=/about/>about</a><h2>Zig 入門</h2><ul>date: 2020-07-11 21:39:11 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/zig.org>edit</a></ul><ul>tags: <a href=/tags/zig/>zig</a>
-<a href=/tags/lang-ja/>lang-ja</a></ul><ul>toc:<nav id=TableOfContents><ul><li><a href=#headline-1>初期設定</a></li><li><a href=#headline-2>プロジェクト作成</a><ul><li><a href=#headline-3>プロジェクト雛形の作成</a></li><li><a href=#headline-4>システムライブラリの追加</a></li></ul></li><li><a href=#headline-5>テスト作成</a><ul><li><a href=#headline-6>test ブロック</a></li><li><a href=#headline-7>build.zig に テストの追加</a></li></ul></li><li><a href=#headline-8>余談</a><ul><li><a href=#headline-9>良いと思った言語機能</a></li><li><a href=#headline-10>今後</a></li></ul></li></ul></nav></ul><p>最近システム系の言語として、Cコンパイラを内蔵したり話題になっている zig 言語。簡単なプログラムを書きながら入門しています。仕様はミニマルな感じですが、なかなかユニークな言語です。</p><p>現時点で最新の0.6.0を想定。公式にドキュメントがない部分も多いので今後変わる可能性が高い。この辺は新参の言語ということで愛嬌だが、RustやD言語のようなレベルを想定すると驚く。ただ一貫した思想のあるミニマリストな言語なので意外となんとかなる。</p><div id=outline-container-headline-1 class=outline-2><h2 id=headline-1>初期設定</h2><div id=outline-text-headline-1 class=outline-text-2><p><a href=https://ziglang.org/download/>公式サイト</a> からビルド済みバイナリをDLしてパスを通すだけ。CPUはx86と各種arm系、OSはlinuxにwindows、freebsdもあるすごい。</p><div class="src src-bash"><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>wget https://ziglang.org/download/0.6.0/zig-linux-x86_64-0.6.0.tar.xz
+<a href=/about/>about</a>
+<h2>Zig 入門</h2>
+<ul>
+date: 2020-07-11 21:39:11 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/zig.org>edit</a>
+</ul>
+<ul>
+tags: <a href=/tags/zig/>zig</a>
+<a href=/tags/lang-ja/>lang-ja</a>
+</ul>
+<ul>
+toc:
+<nav id=TableOfContents>
+<ul>
+<li><a href=#headline-1>初期設定</a>
+</li>
+<li><a href=#headline-2>プロジェクト作成</a>
+<ul>
+<li><a href=#headline-3>プロジェクト雛形の作成</a>
+</li>
+<li><a href=#headline-4>システムライブラリの追加</a>
+</li>
+</ul>
+</li>
+<li><a href=#headline-5>テスト作成</a>
+<ul>
+<li><a href=#headline-6>test ブロック</a>
+</li>
+<li><a href=#headline-7>build.zig に テストの追加</a>
+</li>
+</ul>
+</li>
+<li><a href=#headline-8>余談</a>
+<ul>
+<li><a href=#headline-9>良いと思った言語機能</a>
+</li>
+<li><a href=#headline-10>今後</a>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</ul>
+<p>
+最近システム系の言語として、Cコンパイラを内蔵したり話題になっている zig 言語。簡単なプログラムを書きながら入門しています。仕様はミニマルな感じですが、なかなかユニークな言語です。</p>
+<p>
+現時点で最新の0.6.0を想定。公式にドキュメントがない部分も多いので今後変わる可能性が高い。この辺は新参の言語ということで愛嬌だが、RustやD言語のようなレベルを想定すると驚く。ただ一貫した思想のあるミニマリストな言語なので意外となんとかなる。</p>
+<div id=outline-container-headline-1 class=outline-2>
+<h2 id=headline-1>
+初期設定
+</h2>
+<div id=outline-text-headline-1 class=outline-text-2>
+<p>
+<a href=https://ziglang.org/download/>公式サイト</a> からビルド済みバイナリをDLしてパスを通すだけ。CPUはx86と各種arm系、OSはlinuxにwindows、freebsdもあるすごい。</p>
+<div class="src src-bash">
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>wget https://ziglang.org/download/0.6.0/zig-linux-x86_64-0.6.0.tar.xz
 tar xvf zig-linux-x86_64-0.6.0.tar.xz
-export PATH<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>pwd<span style=color:#66d9ef>)</span>/zig-linux-x86_64-0.6.0:$PATH</code></pre></div></div><p>同じページに <a href=https://ziglang.org/documentation/0.6.0>Language Reference</a> と <a href=https://ziglang.org/documentation/0.6.0/std>Standard Library Documentation</a> がある。これらと github のコードがほぼ全ての情報源である。とりあえず最初の Hello world くらいはやっとくと雰囲気つかめる。</p><p>エディタがLSPに対応していれば <a href=https://github.com/zigtools/zls>zls</a> をいれると定義元にジャンプしたりドキュメント読んだり、はかどります。 <code>zig fmt</code> というコマンドでフォーマットできるのですが、若干クセがあり、例えば構造体などの最後の要素に "," がないと一行にフォーマットされる挙動に最初戸惑いました。このへんの挙動は <a href=https://github.com/ziglang/zig/blob/d21a1922eb5d76b9b0d0611eaeb42c91f83234ab/std/zig/parser_test.zig>このテスト群</a> を見ればわかります。</p></div></div><div id=outline-container-headline-2 class=outline-2><h2 id=headline-2>プロジェクト作成</h2><div id=outline-text-headline-2 class=outline-text-2><p>まずは簡単なプロジェクトの作成から。本稿の情報はまったくドキュメントがなく、全部 <a href=https://github.com/ziglang/zig/blob/0.6.0/lib/std/build.zig>build.zig</a> を読んで得たもので、間違っているかもしれない。</p><div id=outline-container-headline-3 class=outline-3><h3 id=headline-3>プロジェクト雛形の作成</h3><div id=outline-text-headline-3 class=outline-text-3><div class="src src-bash"><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mkdir foo
+export PATH<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>pwd<span style=color:#66d9ef>)</span>/zig-linux-x86_64-0.6.0:$PATH</code></pre></div>
+</div>
+<p>
+同じページに <a href=https://ziglang.org/documentation/0.6.0>Language Reference</a> と <a href=https://ziglang.org/documentation/0.6.0/std>Standard Library Documentation</a> がある。これらと github のコードがほぼ全ての情報源である。とりあえず最初の Hello world くらいはやっとくと雰囲気つかめる。</p>
+<p>
+エディタがLSPに対応していれば <a href=https://github.com/zigtools/zls>zls</a> をいれると定義元にジャンプしたりドキュメント読んだり、はかどります。 <code>zig fmt</code> というコマンドでフォーマットできるのですが、若干クセがあり、例えば構造体などの最後の要素に "," がないと一行にフォーマットされる挙動に最初戸惑いました。このへんの挙動は <a href=https://github.com/ziglang/zig/blob/d21a1922eb5d76b9b0d0611eaeb42c91f83234ab/std/zig/parser_test.zig>このテスト群</a> を見ればわかります。</p>
+</div>
+</div>
+<div id=outline-container-headline-2 class=outline-2>
+<h2 id=headline-2>
+プロジェクト作成
+</h2>
+<div id=outline-text-headline-2 class=outline-text-2>
+<p>
+まずは簡単なプロジェクトの作成から。本稿の情報はまったくドキュメントがなく、全部 <a href=https://github.com/ziglang/zig/blob/0.6.0/lib/std/build.zig>build.zig</a> を読んで得たもので、間違っているかもしれない。</p>
+<div id=outline-container-headline-3 class=outline-3>
+<h3 id=headline-3>
+プロジェクト雛形の作成
+</h3>
+<div id=outline-text-headline-3 class=outline-text-3>
+<div class="src src-bash">
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mkdir foo
 cd foo
-zig init-exe</code></pre></div></div><p>ライブラリを作るときは <code>init-lib</code></p><p>これでこんなファイルが生成される</p><div class="src src-c"><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>const</span> Builder <span style=color:#f92672>=</span> <span style=color:#960050;background-color:#1e0010>@</span>import(<span style=color:#e6db74>&#34;std&#34;</span>).build.Builder;
+zig init-exe</code></pre></div>
+</div>
+<p>ライブラリを作るときは <code>init-lib</code></p>
+<p>
+これでこんなファイルが生成される</p>
+<div class="src src-c">
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>const</span> Builder <span style=color:#f92672>=</span> <span style=color:#960050;background-color:#1e0010>@</span>import(<span style=color:#e6db74>&#34;std&#34;</span>).build.Builder;
 
 pub fn <span style=color:#a6e22e>build</span>(b: <span style=color:#f92672>*</span>Builder) <span style=color:#66d9ef>void</span> {
     <span style=color:#75715e>// Standard target options allows the person running `zig build` to choose
@@ -27,11 +118,44 @@ pub fn <span style=color:#a6e22e>build</span>(b: <span style=color:#f92672>*</sp
     run_cmd.step.dependOn(b.getInstallStep());
     <span style=color:#66d9ef>const</span> run_step <span style=color:#f92672>=</span> b.step(<span style=color:#e6db74>&#34;run&#34;</span>, <span style=color:#e6db74>&#34;Run the app&#34;</span>);
     run_step.dependOn(<span style=color:#f92672>&amp;</span>run_cmd.step);
-}</code></pre></div></div></div></div><div id=outline-container-headline-4 class=outline-3><h3 id=headline-4>システムライブラリの追加</h3><div id=outline-text-headline-4 class=outline-text-3><p>たぶん普通のアプリをかくなら malloc とかで libc は必要。この辺、デフォルトで何もついてないのが真のシステム用言語という感じがしますね。</p><div class="src src-c"><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>    <span style=color:#66d9ef>const</span> exe <span style=color:#f92672>=</span> b.addExecutable(<span style=color:#e6db74>&#34;foo&#34;</span>, <span style=color:#e6db74>&#34;src/main.zig&#34;</span>);
+}</code></pre></div>
+</div>
+</div>
+</div>
+<div id=outline-container-headline-4 class=outline-3>
+<h3 id=headline-4>
+システムライブラリの追加
+</h3>
+<div id=outline-text-headline-4 class=outline-text-3>
+<p>
+たぶん普通のアプリをかくなら malloc とかで libc は必要。この辺、デフォルトで何もついてないのが真のシステム用言語という感じがしますね。</p>
+<div class="src src-c">
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>    <span style=color:#66d9ef>const</span> exe <span style=color:#f92672>=</span> b.addExecutable(<span style=color:#e6db74>&#34;foo&#34;</span>, <span style=color:#e6db74>&#34;src/main.zig&#34;</span>);
     exe.setTarget(target);
     exe.setBuildMode(mode);
     exe.linkSystemLibrary(<span style=color:#e6db74>&#34;c&#34;</span>);  <span style=color:#75715e>// -lc がビルドオプションに追加される
-</span></code></pre></div></div><p>コマンドラインから <code>zig build run</code> で実行。</p></div></div></div></div><div id=outline-container-headline-5 class=outline-2><h2 id=headline-5>テスト作成</h2><div id=outline-text-headline-5 class=outline-text-2><div id=outline-container-headline-6 class=outline-3><h3 id=headline-6>test ブロック</h3><div id=outline-text-headline-6 class=outline-text-3><p>D言語みたいにテスト用の構文がある。これはとても便利で、REPL的に使って言語の確認をしたり便利。</p><div class="src src-c"><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>const</span> std <span style=color:#f92672>=</span> <span style=color:#960050;background-color:#1e0010>@</span>import(<span style=color:#e6db74>&#34;std&#34;</span>);
+</span></code></pre></div>
+</div>
+<p>
+コマンドラインから <code>zig build run</code> で実行。</p>
+</div>
+</div>
+</div>
+</div>
+<div id=outline-container-headline-5 class=outline-2>
+<h2 id=headline-5>
+テスト作成
+</h2>
+<div id=outline-text-headline-5 class=outline-text-2>
+<div id=outline-container-headline-6 class=outline-3>
+<h3 id=headline-6>
+test ブロック
+</h3>
+<div id=outline-text-headline-6 class=outline-text-3>
+<p>
+D言語みたいにテスト用の構文がある。これはとても便利で、REPL的に使って言語の確認をしたり便利。</p>
+<div class="src src-c">
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>const</span> std <span style=color:#f92672>=</span> <span style=color:#960050;background-color:#1e0010>@</span>import(<span style=color:#e6db74>&#34;std&#34;</span>);
 
 fn <span style=color:#a6e22e>f</span>() {
     <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>1</span>;
@@ -39,8 +163,95 @@ fn <span style=color:#a6e22e>f</span>() {
 
 test <span style=color:#e6db74>&#34;f&#34;</span> {
     std.debug.assert(f() <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span>);
-}</code></pre></div></div></div></div><div id=outline-container-headline-7 class=outline-3><h3 id=headline-7>build.zig に テストの追加</h3><div id=outline-text-headline-7 class=outline-text-3><p>正直、これで良いのかわかっていませんが、動いている・ちゃんと失敗するのでとりあえず。</p><div class="src src-c"><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>    <span style=color:#66d9ef>const</span> test_step <span style=color:#f92672>=</span> b.step(<span style=color:#e6db74>&#34;test&#34;</span>, <span style=color:#e6db74>&#34;Test the app&#34;</span>);
+}</code></pre></div>
+</div>
+</div>
+</div>
+<div id=outline-container-headline-7 class=outline-3>
+<h3 id=headline-7>
+build.zig に テストの追加
+</h3>
+<div id=outline-text-headline-7 class=outline-text-3>
+<p>
+正直、これで良いのかわかっていませんが、動いている・ちゃんと失敗するのでとりあえず。</p>
+<div class="src src-c">
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>    <span style=color:#66d9ef>const</span> test_step <span style=color:#f92672>=</span> b.step(<span style=color:#e6db74>&#34;test&#34;</span>, <span style=color:#e6db74>&#34;Test the app&#34;</span>);
     <span style=color:#66d9ef>const</span> main_test <span style=color:#f92672>=</span> b.addTest(<span style=color:#e6db74>&#34;src/main.zig&#34;</span>);
     main_test.linkSystemLibrary(<span style=color:#e6db74>&#34;c&#34;</span>);
     test_step.dependOn(<span style=color:#f92672>&amp;</span>main_test.step); <span style=color:#75715e>// 同じように複数ファイル追加も可能
-</span></code></pre></div></div><p>さっしの通り <code>b.step(コマンド名, 説明)</code> で定義したコマンドを <code>zig build コマンド名</code> で動かせるようだ。かなり汎用。</p></div></div></div></div><div id=outline-container-headline-8 class=outline-2><h2 id=headline-8>余談</h2><div id=outline-text-headline-8 class=outline-text-2><div id=outline-container-headline-9 class=outline-3><h3 id=headline-9>良いと思った言語機能</h3><div id=outline-text-headline-9 class=outline-text-3><ul><li><p>全部明示的に書く思想が読みやすい。dtorの代わりにdefer、例外の代わりにerror union、overloadなし、という潔さ。</p></li><li><p>構文が簡単。<a href=https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.y>yaccで500行</a>というミニマルさ。<a href=https://github.com/ruby/ruby/blob/v2_7_1/parse.y>Rubyのparse.y</a>とかと比べるとすごい。</p></li><li><p><code>union(enum)</code> タグ付きユニオンというやつ。システム系でよくあるパターンを楽に。</p></li><li><p>値にできそうなものは全部値になってる。名前空間とか型情報とかも値。</p></li><li><p>いろんな構文が式で結果を返してくれるところ。短くかける。</p></li><li><p>関数の引数が値か参照かはコンパイラが決める。デフォルトでimmutableだとこういうのがいい。</p></li><li><p>言語機能のoptional型 <code>?T</code> 。ポインタのoptionalはポインタと同じサイズになるのも嬉しい。</p></li><li><p>言語機能のerror union型。スタックトレースでるので実質例外だと思うけど、共有体として Eitherみたいな if/else や switch もできて文法的に便利。</p></li><li><p>上に関連して <code>!T</code> や <code>try</code> 式で、明示的にerrorやoptional投げるところがわかる。。</p></li><li><p><code>defer</code> D言語でいう <code>scope(exit)</code> で、初期化と最終化を並べてかける。</p></li><li><p>WASMをサポートしているところ。そのせいでallocatorとかに依存できない標準ライブラリが結構渋いが。</p></li><li><p>多機能な async/await 構文がある。初見では、なぜここまで多機能なのかわからなかったが、coroutineをやりたいのだろうか。</p></li></ul><p>でも変なところもある、for 文が配列専用で、while文が従来のfor文みたいな役割になってるのは慣れない。<a href=https://ziglang.org/documentation/0.6.0/#Style-Guide>公式のコーディングスタイル</a>も独特である(変数と名前空間はsnake_case、関数はcamelCase、型と型関数はTitleCase)。とはいえ慣れの問題といえばそう。</p></div></div><div id=outline-container-headline-10 class=outline-3><h3 id=headline-10>今後</h3><div id=outline-text-headline-10 class=outline-text-3><p>勉強用に、とりあえず小さいJVMみたいなやつ書いてます。CIとかも設定してる。</p><p><a href=https://github.com/klknn/zigjvm>https://github.com/klknn/zigjvm</a></p><p>今後、とりあえずCとの連携とか調べて、BLASとか数値計算用のライブラリでも作ろうかな。それかvector型があるのでそれを試すか。</p></div></div></div></div>Copyright © klknn All Rights Reserved.</body></html>
+</span></code></pre></div>
+</div>
+<p>さっしの通り <code>b.step(コマンド名, 説明)</code> で定義したコマンドを <code>zig build コマンド名</code> で動かせるようだ。かなり汎用。</p>
+</div>
+</div>
+</div>
+</div>
+<div id=outline-container-headline-8 class=outline-2>
+<h2 id=headline-8>
+余談
+</h2>
+<div id=outline-text-headline-8 class=outline-text-2>
+<div id=outline-container-headline-9 class=outline-3>
+<h3 id=headline-9>
+良いと思った言語機能
+</h3>
+<div id=outline-text-headline-9 class=outline-text-3>
+<ul>
+<li>
+<p>全部明示的に書く思想が読みやすい。dtorの代わりにdefer、例外の代わりにerror union、overloadなし、という潔さ。</p>
+</li>
+<li>
+<p>構文が簡単。<a href=https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.y>yaccで500行</a>というミニマルさ。<a href=https://github.com/ruby/ruby/blob/v2_7_1/parse.y>Rubyのparse.y</a>とかと比べるとすごい。</p>
+</li>
+<li>
+<p><code>union(enum)</code> タグ付きユニオンというやつ。システム系でよくあるパターンを楽に。</p>
+</li>
+<li>
+<p>値にできそうなものは全部値になってる。名前空間とか型情報とかも値。</p>
+</li>
+<li>
+<p>いろんな構文が式で結果を返してくれるところ。短くかける。</p>
+</li>
+<li>
+<p>関数の引数が値か参照かはコンパイラが決める。デフォルトでimmutableだとこういうのがいい。</p>
+</li>
+<li>
+<p>言語機能のoptional型 <code>?T</code> 。ポインタのoptionalはポインタと同じサイズになるのも嬉しい。</p>
+</li>
+<li>
+<p>言語機能のerror union型。スタックトレースでるので実質例外だと思うけど、共有体として Eitherみたいな if/else や switch もできて文法的に便利。</p>
+</li>
+<li>
+<p>上に関連して <code>!T</code> や <code>try</code> 式で、明示的にerrorやoptional投げるところがわかる。。</p>
+</li>
+<li>
+<p><code>defer</code> D言語でいう <code>scope(exit)</code> で、初期化と最終化を並べてかける。</p>
+</li>
+<li>
+<p>WASMをサポートしているところ。そのせいでallocatorとかに依存できない標準ライブラリが結構渋いが。</p>
+</li>
+<li>
+<p>多機能な async/await 構文がある。初見では、なぜここまで多機能なのかわからなかったが、coroutineをやりたいのだろうか。</p>
+</li>
+</ul>
+<p>でも変なところもある、for 文が配列専用で、while文が従来のfor文みたいな役割になってるのは慣れない。<a href=https://ziglang.org/documentation/0.6.0/#Style-Guide>公式のコーディングスタイル</a>も独特である(変数と名前空間はsnake_case、関数はcamelCase、型と型関数はTitleCase)。とはいえ慣れの問題といえばそう。</p>
+</div>
+</div>
+<div id=outline-container-headline-10 class=outline-3>
+<h3 id=headline-10>
+今後
+</h3>
+<div id=outline-text-headline-10 class=outline-text-3>
+<p>
+勉強用に、とりあえず小さいJVMみたいなやつ書いてます。CIとかも設定してる。</p>
+<p>
+<a href=https://github.com/klknn/zigjvm>https://github.com/klknn/zigjvm</a></p>
+<p>
+今後、とりあえずCとの連携とか調べて、BLASとか数値計算用のライブラリでも作ろうかな。それかvector型があるのでそれを試すか。</p>
+</div>
+</div>
+</div>
+</div>
+Copyright © klknn All Rights Reserved.
+</body>
+</html>
