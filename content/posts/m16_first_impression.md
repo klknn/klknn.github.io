@@ -1,5 +1,5 @@
 ---
-title: "ASUS M16がDTM最強ノートPCである5つの理由"
+title: "DTM最強ノートPCとしてASUS ROG Zephyrus M16を購入"
 date: 2022-05-04T10:24:12+09:00
 draft: false
 tags: ["PC", "DTM"]
