@@ -9,18 +9,33 @@
     a:active { color: #f80; }
 }
 h1, h2, h3, h4, h5, h6 {
-    margin: 2rem auto;
+    margin: 2rem auto 1rem;
     max-width: 40rem;
-}}
-p {
-    text-indent: 1rem;
 }
-p, ul, li, .highlight, .gist-file, figure {
+.toc {
+    max-width: 35rem;
+    padding: 1rem;
+    border: dotted;
+}
+p, .highlight, .gist-file, blockquote, figure, div, hr {
     margin: 1rem auto;
     max-width: 40rem;
+    width: 90%;
 }
-ul, li { margin: 0.1rem auto; width: 100% }
-img { width: 100%; }
+blockquote {
+    margin: 1rem auto;
+    max-width: 35rem;
+    width: 90%;
+    font-style: italic;
+    border-left: solid 5px;
+}
+ul, li {
+    margin: 0.1rem auto;
+    max-width: 40rem;
+}
+img {
+    width: 100%;
+}
 table, th, td {
     border-collapse: collapse;
     border: 1px solid;
@@ -33,5 +48,9 @@ table, th, td {
 }
 figcaption {
     text-align: center;
+    font-style: italic;
+}
+.index-date {
+    text-align: right;
     font-style: italic;
 }

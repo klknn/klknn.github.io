@@ -14,6 +14,9 @@ hello[^a]
 
 ![emacs-company-dcd.png](/emacs-company-dcd.png)
 
+{{< figure src="/emacs-company-dcd.png" caption="caption for image." >}}
+
+
 ## code block
 ```python
 def f(x):

@@ -14,11 +14,10 @@ tags: {{ range .Params.tags -}}
   <a href="{{ print "/tags/" . | relURL }}/">{{ . }}</a>
 {{ end -}}
 </ul>
-<ul>
-toc:
+<div class="toc">
+  Table of contents
 {{.TableOfContents}}
-</ul>
-
+</div>
 {{ .Content }}
 
 {{ "<!-- _default/single.html end -->" | safeHTML }}
