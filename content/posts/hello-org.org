@@ -20,7 +20,16 @@ hello [fn:A] [fn:inline:this is the inline footnote https://orgmode.org/manual/C
 
 test [fn:inline]
 
-[fn:A] image [[https://orgmode.org/img/org-mode-unicorn-logo.png]]
+[fn:A] foo
+
+
+* image
+
+  image
+
+  #+NAME: img:1
+  #+CAPTION: Caption for image 1.
+  [[/emacs-company-dcd.png]]
 
 * code block
 #+BEGIN_SRC python
@@ -68,4 +77,3 @@ a
 
 
 Table [[tab:1]].
-

@@ -1,0 +1,37 @@
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #222;
+        color: #ddd;
+    }
+    a:link { color: #88c; }
+    a:visited { color: #bbc; }
+    a:hover { color: #f88; }
+    a:active { color: #f80; }
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 2rem auto;
+    max-width: 40rem;
+}}
+p {
+    text-indent: 1rem;
+}
+p, ul, li, .highlight, .gist-file, figure {
+    margin: 1rem auto;
+    max-width: 40rem;
+}
+ul, li { margin: 0.1rem auto; width: 100% }
+img { width: 100%; }
+table, th, td {
+    border-collapse: collapse;
+    border: 1px solid;
+    line-height: 1.5;
+    padding: 10px;
+    border-left: none;
+    border-right: none;
+    margin: 1rem auto;
+    max-width: 40rem;
+}
+figcaption {
+    text-align: center;
+    font-style: italic;
+}

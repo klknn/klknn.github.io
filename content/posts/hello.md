@@ -12,7 +12,7 @@ hello[^a]
 
 [^a]: this is footnote
 
-![img](https://orgmode.org/img/org-mode-unicorn-logo.png)
+![emacs-company-dcd.png](/emacs-company-dcd.png)
 
 ## code block
 ```python
