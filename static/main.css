@@ -17,7 +17,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 1rem;
     border: dotted;
 }
-p, .highlight, .gist-file, blockquote, figure, div, hr {
+p, .highlight, .gist-file, figure, div, hr {
     margin: 1rem auto;
     max-width: 40rem;
     width: 90%;
@@ -25,12 +25,11 @@ p, .highlight, .gist-file, blockquote, figure, div, hr {
 blockquote {
     margin: 1rem auto;
     max-width: 35rem;
-    width: 90%;
     font-style: italic;
     border-left: solid 5px;
 }
 ul, li {
-    margin: 0.1rem auto;
+    margin: 0.75rem auto;
     max-width: 40rem;
 }
 img {
