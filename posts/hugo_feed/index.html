@@ -1,0 +1,110 @@
+<!doctype html><html>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>はてなブログ的なfeedをHugoで生成</title>
+<link rel=stylesheet type=text/css href=/main.css>
+<script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']]}}</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script>
+</head>
+<body>
+<a href=/>klknn log</a> /
+<a href=/posts/>posts</a> /
+<a href=/tags/>tags</a> /
+<a href=/about/>about</a>
+<h1>はてなブログ的なfeedをHugoで生成</h1>
+<ul>
+date: 2022-08-24 23:32:31 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/hugo_feed.md>edit</a>
+</ul>
+<ul>
+tags: <a href=/tags/Untagged/>Untagged</a>
+</ul>
+<div class=toc>
+Table of contents
+<nav id=TableOfContents>
+<ul>
+<li><a href=#はてなのfeed>はてなのfeed</a></li>
+<li><a href=#hugoのfeed>Hugoのfeed</a></li>
+<li><a href=#まとめ>まとめ</a></li>
+</ul>
+</nav>
+</div>
+<p>RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。
+今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。</p>
+<h2 id=はてなのfeed>はてなのfeed</h2>
+<p>まずFeedlyで適当に普段読んでるhatenaブログをみてみると、取得してるURLが設定画面で把握できます。大抵は以下のようなXMLがでてきます:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#f92672>&lt;feed</span> <span style=color:#a6e22e>xmlns=</span><span style=color:#e6db74>&#34;http://www.w3.org/2005/Atom&#34;</span> <span style=color:#a6e22e>xml:lang=</span><span style=color:#e6db74>&#34;ja&#34;</span><span style=color:#f92672>&gt;</span>
+  <span style=color:#f92672>&lt;title&gt;</span>・ｘ・ぼくののうみそ<span style=color:#f92672>&lt;/title&gt;</span>
+
+  <span style=color:#f92672>&lt;link</span> <span style=color:#a6e22e>href=</span><span style=color:#e6db74>&#34;https://bokunonoumiso.hatenablog.com/&#34;</span><span style=color:#f92672>/&gt;</span>
+  <span style=color:#f92672>&lt;updated&gt;</span>2022-08-09T12:41:41+09:00<span style=color:#f92672>&lt;/updated&gt;</span>
+  <span style=color:#f92672>&lt;author&gt;</span>
+    <span style=color:#f92672>&lt;name&gt;</span>bokunonoumiso<span style=color:#f92672>&lt;/name&gt;</span>
+  <span style=color:#f92672>&lt;/author&gt;</span>
+  <span style=color:#f92672>&lt;generator</span> <span style=color:#a6e22e>uri=</span><span style=color:#e6db74>&#34;https://blog.hatena.ne.jp/&#34;</span> <span style=color:#a6e22e>version=</span><span style=color:#e6db74>&#34;149d375eb29bfc5c8439e961a2b85a&#34;</span><span style=color:#f92672>&gt;</span>Hatena::Blog<span style=color:#f92672>&lt;/generator&gt;</span>
+  <span style=color:#f92672>&lt;id&gt;</span>hatenablog://blog/6653812171403772804<span style=color:#f92672>&lt;/id&gt;</span>
+    <span style=color:#f92672>&lt;entry&gt;</span>
+        <span style=color:#f92672>&lt;title&gt;</span>高い車に乗って安い車を煽る<span style=color:#f92672>&lt;/title&gt;</span>
+        <span style=color:#f92672>&lt;link</span> <span style=color:#a6e22e>href=</span><span style=color:#e6db74>&#34;https://bokunonoumiso.hatenablog.com/entry/2022/08/09/124141&#34;</span><span style=color:#f92672>/&gt;</span>
+        <span style=color:#f92672>&lt;id&gt;</span>hatenablog://entry/4207112889907092076<span style=color:#f92672>&lt;/id&gt;</span>
+        <span style=color:#f92672>&lt;published&gt;</span>2022-08-09T12:41:41+09:00<span style=color:#f92672>&lt;/published&gt;</span>
+        <span style=color:#f92672>&lt;updated&gt;</span>2022-08-09T12:41:41+09:00<span style=color:#f92672>&lt;/updated&gt;</span>
+        <span style=color:#f92672>&lt;summary</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>高い車が安い車を煽る…<span style=color:#f92672>&lt;/summary&gt;</span>
+        <span style=color:#f92672>&lt;content</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>&amp;lt;p&amp;gt;高い車が安い車を煽る&amp;lt;/p&amp;gt;<span style=color:#f92672>&lt;/content&gt;</span>
+   <span style=color:#f92672>&lt;/entry&gt;</span>
+<span style=color:#f92672>&lt;/feed&gt;</span>
+</code></pre></div><p>注意点としては</p>
+<ul>
+<li>RSS 1.0/2.0ではなく<a href=http://www.w3.org/2005/Atom>ATOM規格</a>っぽい</li>
+<li>contentの中身はhtmlなので、escape されてる</li>
+</ul>
+<h2 id=hugoのfeed>Hugoのfeed</h2>
+<p><a href=https://github.com/gohugoio/hugo/blob/988e1417a057b937a766385f79f46a52e933baee/tpl/tplimpl/embedded/templates/_default/rss.xml>Hugo標準付属のrss.xml</a>はRSS 2.0なのかAtomなのかよくわからない感じですね。
+hatenaブログのフィードっぽくしたテンプレートはこんな感じです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml>{{- $pctx := . -}}
+{{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
+{{- $pages := slice -}}
+{{- if or $.IsHome $.IsSection -}}
+{{- $pages = $pctx.RegularPages -}}
+{{- else -}}
+{{- $pages = $pctx.Pages -}}
+{{- end -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 -}}
+{{- $pages = $pages | first $limit -}}
+{{- end -}}
+{{- printf &#34;<span style=color:#75715e>&lt;?xml version=\&#34;1.0\&#34; encoding=\&#34;utf-8\&#34; standalone=\&#34;yes\&#34;?&gt;</span>&#34; | safeHTML }}
+<span style=color:#f92672>&lt;feed</span> <span style=color:#a6e22e>xmlns=</span><span style=color:#e6db74>&#34;http://www.w3.org/2005/Atom&#34;</span> <span style=color:#a6e22e>xml:lang=</span><span style=color:#e6db74>&#34;ja&#34;</span><span style=color:#f92672>&gt;</span>
+  <span style=color:#f92672>&lt;title&gt;</span>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{.}} on {{ end }}{{ .Site.Title }}{{ end }}<span style=color:#f92672>&lt;/title&gt;</span>
+
+  <span style=color:#f92672>&lt;link&gt;</span>{{ .Permalink }}<span style=color:#f92672>&lt;/link&gt;</span>
+  <span style=color:#f92672>&lt;updated&gt;</span>{{ time.Format &#34;2006-01-02T15:04:05-0700&#34; .Site.LastChange | safeHTML }}<span style=color:#f92672>&lt;/updated&gt;</span>
+  <span style=color:#f92672>&lt;author&gt;</span>
+    <span style=color:#f92672>&lt;name&gt;</span>{{ $.Site.Params.author }}<span style=color:#f92672>&lt;/name&gt;</span>
+  <span style=color:#f92672>&lt;/author&gt;</span>
+  <span style=color:#f92672>&lt;generator</span> <span style=color:#a6e22e>uri=</span><span style=color:#e6db74>&#34;https://gohugo.io&#34;</span> <span style=color:#a6e22e>version=</span><span style=color:#e6db74>&#34;{{ hugo.Version }}&#34;</span><span style=color:#f92672>&gt;</span>Hugo<span style=color:#f92672>&lt;/generator&gt;</span>
+  <span style=color:#f92672>&lt;id&gt;</span>{{ .Permalink }}<span style=color:#f92672>&lt;/id&gt;</span>
+
+  {{ range $pages }}
+  <span style=color:#f92672>&lt;entry&gt;</span>
+    <span style=color:#f92672>&lt;title&gt;</span>{{ .Title }}<span style=color:#f92672>&lt;/title&gt;</span>
+    <span style=color:#f92672>&lt;link</span> <span style=color:#a6e22e>href=</span><span style=color:#e6db74>&#34;{{ .Permalink }}&#34;</span><span style=color:#f92672>/&gt;</span>
+    <span style=color:#f92672>&lt;id&gt;</span>{{ .Permalink }}<span style=color:#f92672>&lt;/id&gt;</span>
+    <span style=color:#f92672>&lt;published&gt;</span>{{ .PublishDate.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style=color:#f92672>&lt;/published&gt;</span>
+    <span style=color:#f92672>&lt;updated&gt;</span>{{ .Lastmod.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style=color:#f92672>&lt;/updated&gt;</span>
+    {{ with .Site.Author.email }}<span style=color:#f92672>&lt;author&gt;</span>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}<span style=color:#f92672>&lt;/author&gt;</span>{{end}}
+    <span style=color:#f92672>&lt;summary</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>{{ .Summary | htmlEscape }}...<span style=color:#f92672>&lt;/summary&gt;</span>
+    <span style=color:#f92672>&lt;content</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>{{ .Content | htmlEscape }}<span style=color:#f92672>&lt;/content&gt;</span>
+  <span style=color:#f92672>&lt;/entry&gt;</span>
+  {{ end }}
+<span style=color:#f92672>&lt;/feed&gt;</span>
+
+</code></pre></div>
+<p>詳細は以下のcommitを見てください。</p>
+<p><a href=https://github.com/klknn/klknn.github.io/commit/afb831f515d54b451e70fbc5e5ae95e669d79c75>https://github.com/klknn/klknn.github.io/commit/afb831f515d54b451e70fbc5e5ae95e669d79c75</a></p>
+<h2 id=まとめ>まとめ</h2>
+<p>RSSリーダーって10年前まではみんな使ってたのにGoogle readerが終わって一気に死んだよね&mldr;インターネット老人ネタでした。</p>
+Copyright © klknn All Rights Reserved.
+</body>
+</html>
