@@ -7,7 +7,7 @@
     <title>{{ block "title" . }}{{ end }}</title>
     <link rel="stylesheet" type="text/css" href="{{ relURL "/main.css" }}">
     {{ range .AlternativeOutputFormats -}}
-    {{ printf `<link rel="%s" type="application/atom" href="%s" title="Atom" />` .Rel .Permalink | safeHTML }}
+    {{ printf `<link rel="%s" type="application/atom+xml" href="%s" title="Atom" />` .Rel .Permalink | safeHTML }}
     {{ end -}}
     <script>
       MathJax = {
