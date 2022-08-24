@@ -12,7 +12,7 @@ isCJKLanguage: true
 
 新曲 flare (1曲目) と、リミックスしたoverflowとnullusを、[Yuy氏](https://twitter.com/Yuy_H)のサークルSecret Messengerに提供しました。既発表曲 overflow, sillenite の再マスタリング版も収録されています。歌は全部[nayutaさん](https://twitter.com/7utauta)です。
 
-{{< youtube id="JJiAm1oZlns" autoplay="true" >}}
+{{< youtube id="JJiAm1oZlns" autoplay="false" >}}
 
 公式サイト https://scmn0020.tumblr.com/
 
