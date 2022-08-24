@@ -26,7 +26,8 @@
       <a href="{{ relURL "/" }}">{{ .Site.Title }}</a> /
       <a href="{{ relURL "/posts/" }}">posts</a> /
       <a href="{{ relURL "/tags/" }}">tags</a> /
-      <a href="{{ relURL "/about/" }}">about</a>
+      <a href="{{ relURL "/about/" }}">about</a> /
+      <a href="{{ relURL "/index.xml" }}">feed</a>
 
     {{ block "main" . }}{{ end }}
 
