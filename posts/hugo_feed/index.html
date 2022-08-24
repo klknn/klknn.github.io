@@ -74,11 +74,10 @@ hatenaブログのフィードっぽくしたテンプレートはこんな感�
 {{- if ge $limit 1 -}}
 {{- $pages = $pages | first $limit -}}
 {{- end -}}
-{{- printf &#34;<span style=color:#75715e>&lt;?xml version=\&#34;1.0\&#34; encoding=\&#34;utf-8\&#34; standalone=\&#34;yes\&#34;?&gt;</span>&#34; | safeHTML }}
 <span style=color:#f92672>&lt;feed</span> <span style=color:#a6e22e>xmlns=</span><span style=color:#e6db74>&#34;http://www.w3.org/2005/Atom&#34;</span> <span style=color:#a6e22e>xml:lang=</span><span style=color:#e6db74>&#34;ja&#34;</span><span style=color:#f92672>&gt;</span>
   <span style=color:#f92672>&lt;title&gt;</span>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{.}} on {{ end }}{{ .Site.Title }}{{ end }}<span style=color:#f92672>&lt;/title&gt;</span>
 
-  <span style=color:#f92672>&lt;link&gt;</span>{{ .Permalink }}<span style=color:#f92672>&lt;/link&gt;</span>
+  <span style=color:#f92672>&lt;link</span> <span style=color:#a6e22e>href=</span><span style=color:#e6db74>&#34;{{ .Permalink }}&#34;</span><span style=color:#f92672>/&gt;</span>
   <span style=color:#f92672>&lt;updated&gt;</span>{{ time.Format &#34;2006-01-02T15:04:05-0700&#34; .Site.LastChange | safeHTML }}<span style=color:#f92672>&lt;/updated&gt;</span>
   <span style=color:#f92672>&lt;author&gt;</span>
     <span style=color:#f92672>&lt;name&gt;</span>{{ $.Site.Params.author }}<span style=color:#f92672>&lt;/name&gt;</span>
@@ -94,8 +93,8 @@ hatenaブログのフィードっぽくしたテンプレートはこんな感�
     <span style=color:#f92672>&lt;published&gt;</span>{{ .PublishDate.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style=color:#f92672>&lt;/published&gt;</span>
     <span style=color:#f92672>&lt;updated&gt;</span>{{ .Lastmod.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style=color:#f92672>&lt;/updated&gt;</span>
     {{ with .Site.Author.email }}<span style=color:#f92672>&lt;author&gt;</span>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}<span style=color:#f92672>&lt;/author&gt;</span>{{end}}
-    <span style=color:#f92672>&lt;summary</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>{{ .Summary | htmlEscape }}...<span style=color:#f92672>&lt;/summary&gt;</span>
-    <span style=color:#f92672>&lt;content</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>{{ .Content | htmlEscape }}<span style=color:#f92672>&lt;/content&gt;</span>
+    <span style=color:#f92672>&lt;summary</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span>{{ .Summary | plainify }}...<span style=color:#f92672>&lt;/summary&gt;</span>
+    {{ printf `<span style=color:#f92672>&lt;content</span> <span style=color:#a6e22e>type=</span><span style=color:#e6db74>&#34;html&#34;</span><span style=color:#f92672>&gt;</span><span style=color:#75715e>&lt;![CDATA[%s]]&gt;</span><span style=color:#f92672>&lt;/content&gt;</span>` .Content | safeHTML }}
   <span style=color:#f92672>&lt;/entry&gt;</span>
   {{ end }}
 <span style=color:#f92672>&lt;/feed&gt;</span>
