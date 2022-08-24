@@ -1,8 +1,8 @@
 baseURL = "https://klknn.github.io/"
 languageCode = "ja"
 title = "klknn log"
+summaryLength = 300
 
 [params]
   author = "klknn"
   editURL = "https://github.com/klknn/klknn.github.io/edit/develop/content"
-
