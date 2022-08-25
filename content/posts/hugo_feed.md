@@ -2,7 +2,7 @@
 title: "はてなブログ的なfeedをHugoで生成"
 date: 2022-08-24T23:32:31+09:00
 draft: false
-tags: ["Untagged"]
+tags: ["hugo"]
 isCJKLanguage: true
 toc: false
 ---
@@ -41,8 +41,11 @@ RSSリーダーのFeedlyを使っていて、はてなブログとかは全文�
 
 注意点としては
 
-- RSS 1.0/2.0ではなく[ATOM規格](http://www.w3.org/2005/Atom)っぽい
-- contentの中身はhtmlなので、escape されてる
+- RSS 1.0/2.0ではなく[ATOM規格](http://www.w3.org/2005/Atom)っぽい。summaryに概要、contentに本文を入れることができる。
+- summaryでは多くのリーダーで対応するために、htmlタグなしの plainify されたテキストが良さそう。
+- contentの中身はhtmlなので、escape するか CDATA 属性に突っ込む。なおhugo組み込み関数のescapeHTMLでは`&`も変換されてしまいうまくいかなかった。
+- もし RSS 1.0/2.0 を使いたい場合、本文を表示するには `<content:encoded>` を使うと良いらしい https://www.w3.org/wiki/RssContent
+
 
 ## Hugoのfeed
 

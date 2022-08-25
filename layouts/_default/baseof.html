@@ -5,10 +5,16 @@
     <!-- TODO: depecated https://developer.mozilla.org/ja/docs/Web/CSS/@media/device-width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ block "title" . }}{{ end }}</title>
-    <link rel="stylesheet" type="text/css" href="{{ relURL "/main.css" }}">
+
+    {{ $css := resources.Get "main.scss" | resources.ToCSS }}
+    <style>
+      {{ $css.Content | safeCSS }}
+    </style>
+
     {{ range .AlternativeOutputFormats -}}
     {{ printf `<link rel="%s" type="application/atom+xml" title="Atom" href="%s"/>` .Rel .Permalink | safeHTML }}
     {{ end -}}
+
     <script>
       MathJax = {
           tex: {
@@ -17,7 +23,6 @@
           }
       };
     </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
   </head>
   <body>

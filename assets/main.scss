@@ -1,3 +1,5 @@
+$content-max-width: 50rem;
+$content-sub-max-width: $content-max-width - 5rem;
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #222;
@@ -10,27 +12,27 @@
 }
 h1, h2, h3, h4, h5, h6 {
     margin: 2rem auto 1rem;
-    max-width: 40rem;
+    max-width: $content-max-width;
 }
 .toc {
-    max-width: 35rem;
+    max-width: $content-sub-max-width;
     padding: 1rem;
     border: dotted;
 }
 p, .highlight, .gist-file, figure, div, hr {
     margin: 1rem auto;
-    max-width: 40rem;
+    max-width: $content-max-width;
     width: 90%;
 }
 blockquote {
     margin: 1rem auto;
-    max-width: 35rem;
+    max-width: $content-sub-max-width;
     font-style: italic;
     border-left: solid 5px;
 }
 ul, li {
     margin: 0.75rem auto;
-    max-width: 40rem;
+    max-width: $content-max-width;
 }
 img {
     width: 100%;
@@ -43,7 +45,7 @@ table, th, td {
     border-left: none;
     border-right: none;
     margin: 1rem auto;
-    max-width: 40rem;
+    max-width: $content-max-width;
 }
 figcaption {
     text-align: center;
@@ -52,4 +54,8 @@ figcaption {
 .index-date {
     text-align: right;
     font-style: italic;
+}
+/* code block */
+pre {
+  overflow: scroll;
 }
