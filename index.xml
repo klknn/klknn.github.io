@@ -15,7 +15,9 @@
 </span></span></code></pre></div><p>でてくる関数の詳細は <a href="https://gohugo.io/categories/asset-management">https://gohugo.io/categories/asset-management</a> を読んでください。SCSSを使うには extended と書いてあるバイナリを使う必要があるので注意です。生成されたファイルは <code>/resources/_gen/*</code> に作られるので <code>.gitignore</code> などに含めておくと良いでしょう</p>
 <p>ちなみにSCSSはCSSと概ね互換性があるので、そのまま読めます。文法はここ　https://sass-lang.com/documentation/syntax より <a href="https://sass-lang.com/guide">https://sass-lang.com/guide</a> のほうが簡単にまとまってていいです。今回はとりあえず変数と演算を使ってページの幅とか調整しました。正直文法が気持ち悪いのであまり深追いしたくはないです。</p>
 <h2 id="まとめ">まとめ</h2>
-<p>気が変わっていにしえのHTML/CSS直書き原理主義にもどるかもしれませんが、いまのところMarkdown -&gt; HTML と SCSS -&gt; CSSと変換できるHugoに満足です。</p>]]></content></entry><entry><title>はてなブログ的なfeedをHugoで生成</title><link href="https://klknn.github.io/posts/hugo_feed/"/><id>https://klknn.github.io/posts/hugo_feed/</id><published>2022-08-24T23:32:31+0900</published><updated>2022-08-24T23:32:31+0900</updated><summary type="html">RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。
+<p>気が変わっていにしえのHTML/CSS直書き原理主義にもどるかもしれませんが、いまのところMarkdown -&gt; HTML と SCSS -&gt; CSSと変換できるHugoに満足です。
+全体的な変更は以下のcommitを参考にしてください:
+<a href="https://github.com/klknn/klknn.github.io/commit/8274c0765fe232a562ce229983d7a955bf480bad">https://github.com/klknn/klknn.github.io/commit/8274c0765fe232a562ce229983d7a955bf480bad</a></p>]]></content></entry><entry><title>はてなブログ的なfeedをHugoで生成</title><link href="https://klknn.github.io/posts/hugo_feed/"/><id>https://klknn.github.io/posts/hugo_feed/</id><published>2022-08-24T23:32:31+0900</published><updated>2022-08-24T23:32:31+0900</updated><summary type="html">RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。
 ...</summary><content type="html"><![CDATA[<p>RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。
 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。</p>
 <h2 id="はてなのfeed">はてなのfeed</h2>
