@@ -1,67 +1,14 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<title>WindowsでのDplug開発</title>
-<link rel=stylesheet type=text/css href=/main.css>
-<script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script>
-</head>
-<body>
-<a href=/>klknn log</a> /
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>WindowsでのDplug開発</title><style>@media(prefers-color-scheme:dark){body{background-color:#222;color:#ddd}a:link{color:#88c}a:visited{color:#bbc}a:hover{color:#f88}a:active{color:#f80}}h1,h2,h3,h4,h5,h6{margin:2rem auto 1rem;max-width:50rem}.toc{max-width:45rem;padding:1rem;border:dotted}p,.highlight,.gist-file,figure,div,hr{margin:1rem auto;max-width:50rem;width:90%}blockquote{margin:1rem auto;max-width:45rem;font-style:italic;border-left:solid 5px}ul,li{margin:.75rem auto;max-width:50rem}img{width:100%}table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;padding:10px;border-left:none;border-right:none;margin:1rem auto;max-width:50rem}figcaption{text-align:center;font-style:italic}.index-date{text-align:right;font-style:italic}pre{overflow:scroll}</style><script>MathJax={tex:{tags:"ams",inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script></head><body><a href=/>klknn log</a> /
 <a href=/posts/>posts</a> /
 <a href=/tags/>tags</a> /
 <a href=/about/>about</a> /
-<a href=/index.xml>feed</a>
-<h1>WindowsでのDplug開発</h1>
-<ul>
-date: 2021-02-28 14:24:12 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/d-windows.md>edit</a>
-</ul>
-<ul>
-tags: <a href=/tags/dplug/>dplug</a>
-<a href=/tags/lang-ja/>lang-ja</a>
-</ul>
-<div class=toc>
-Table of contents
-<nav id=TableOfContents>
-<ul>
-<li><a href=#コンパイラ>コンパイラ</a></li>
-<li><a href=#エディタ>エディタ</a></li>
-</ul>
-</nav>
-</div>
-<p><a href=https://github.com/klknn/synth2>Synth2</a> 開発のために，普段の音楽制作で使ってるWindowsで開発環境を構築しました．その備忘録です．</p>
-<h2 id=コンパイラ>コンパイラ</h2>
-<p>以下のツールが必要</p>
-<ul>
-<li>MSVC x64/x86 build tools (v14.28) + Windows 10 SDK (10.01924.10) : <a href=https://visualstudio.microsoft.com>https://visualstudio.microsoft.com</a>
-64bitバイナリのリンクに必要．数GBあるのなんなんですかね．(XCodeよりはマシだが)．Github Actions読み解けば減らせるかもしれない．</li>
-<li>ldc2 最新版 (ldc2-1.25.0-windows-x64.7z): <a href=https://github.com/ldc-developers/ldc/releases>https://github.com/ldc-developers/ldc/releases</a>
-D言語のコンパイルに必要．</li>
-<li>dplug-build: <a href=https://github.com/AuburnSounds/Dplug/wiki/Getting-Started#step-3-build-the-dplug-build-tool>https://github.com/AuburnSounds/Dplug/wiki/Getting-Started#step-3-build-the-dplug-build-tool</a>
-動的ライブラリをVST3等のプラグインに変換するときに必要．</li>
-</ul>
-<p>色々書くのが面倒で動画も作ったので，暇な人は見てください．</p>
-<p><a href="https://www.youtube.com/watch?v=vZEgpgHGI-A&t=17s">https://www.youtube.com/watch?v=vZEgpgHGI-A&t=17s</a></p>
-<p>動画ではPowerShellを使ってますが，私はzsh (+tmux+emacs) が好きなので，基本 <a href=https://www.msys2.org/>MSYS2</a> で開発してます．</p>
-<h2 id=エディタ>エディタ</h2>
-<p>拘りがなければ <a href=https://github.com/Pure-D/code-d>VSCode の D 言語拡張</a> を入れるのが一番いいと思います．私はemacsが好きなので使ってませんが．</p>
-<p>とにかくEmacs対応が一番大変でした．D言語での補完などはDCDが一般的なツールで，それをもとにLSPなどが整備されているようですが，現状VSCode以外で動かせず (Linuxでもできなかった)．結局いつもLinuxで使ってるDCDの薄いラッパーである company-dcd に Windows 特有の問題 (DUBパッケージの場所，パスの文法，CR改行) を対処するパッチをあてて使いました．正確には company-dcd が依存してる flycheck-dmd-dub というパッケージにもパッチが必要です．</p>
-<ul>
-<li><a href=https://github.com/klknn/flycheck-dmd-dub/tree/fix-cygwin>https://github.com/klknn/flycheck-dmd-dub/tree/fix-cygwin</a></li>
-<li><a href=https://github.com/klknn/company-dcd/tree/fix-cygwin>https://github.com/klknn/company-dcd/tree/fix-cygwin</a></li>
-</ul>
-<p>上記のパッケージにelispのパスを通して，こんな感じで設定してます．</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-elisp data-lang=elisp>(add-to-list <span style=color:#e6db74>&#39;load-path</span> <span style=color:#e6db74>&#34;flycheck-dmd-dubのパス&#34;</span>)
-(add-to-list <span style=color:#e6db74>&#39;load-path</span> <span style=color:#e6db74>&#34;company-dcdのパス&#34;</span>)
-(add-hook <span style=color:#e6db74>&#39;d-mode-hook</span> <span style=color:#e6db74>&#39;company-dcd-mode</span>)
-(setq company-dcd-client-execulable <span style=color:#e6db74>&#34;dcd-client.exeのパス&#34;</span>)
-(setq company-dcd-server-execulable <span style=color:#e6db74>&#34;dcd-server.exeのパス&#34;</span>)
-</code></pre></div><p>こんな風にcompanyによる補完や <code>C-c .</code> による定義ジャンプが動くはずです．</p>
-<p><img src=/emacs-company-dcd.png alt=emacs-company-dcd.png></p>
-<p>とりあえず <a href=https://github.com/atilaneves/flycheck-dmd-dub/pull/15>flycheck-dmd-dub に PR</a> を出しました，もし無事マージされたら company-dcd にもPRしたいと思います．</p>
-<p>とても久しぶりにelisp書きましたが，シェルスクリプトばりに雑に書けてインタラクティブに動作できるので気持ちいいなと思いました．この適当にhackして治せる点が，他のエディタにない醍醐味だと思います．もしWindowsでemacsがうまく動かなかったらブチ切れてMacを買っていたかもしれません(そっちで動く保証はないですが)．現在Macは持っていないのでサポートする予定ないです．</p>
-Copyright © klknn All Rights Reserved.
-</body>
-</html>
+<a href=/index.xml>feed</a><h1>WindowsでのDplug開発</h1><ul>date: 2021-02-28 14:24:12 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/d-windows.md>edit</a></ul><ul>tags: <a href=/tags/dplug/>dplug</a>
+<a href=/tags/lang-ja/>lang-ja</a></ul><div class=toc>Table of contents<nav id=TableOfContents><ul><li><a href=#コンパイラ>コンパイラ</a></li><li><a href=#エディタ>エディタ</a></li></ul></nav></div><p><a href=https://github.com/klknn/synth2>Synth2</a> 開発のために，普段の音楽制作で使ってるWindowsで開発環境を構築しました．その備忘録です．</p><h2 id=コンパイラ>コンパイラ</h2><p>以下のツールが必要</p><ul><li>MSVC x64/x86 build tools (v14.28) + Windows 10 SDK (10.01924.10) : <a href=https://visualstudio.microsoft.com>https://visualstudio.microsoft.com</a>
+64bitバイナリのリンクに必要．数GBあるのなんなんですかね．(XCodeよりはマシだが)．Github Actions読み解けば減らせるかもしれない．</li><li>ldc2 最新版 (ldc2-1.25.0-windows-x64.7z): <a href=https://github.com/ldc-developers/ldc/releases>https://github.com/ldc-developers/ldc/releases</a>
+D言語のコンパイルに必要．</li><li>dplug-build: <a href=https://github.com/AuburnSounds/Dplug/wiki/Getting-Started#step-3-build-the-dplug-build-tool>https://github.com/AuburnSounds/Dplug/wiki/Getting-Started#step-3-build-the-dplug-build-tool</a>
+動的ライブラリをVST3等のプラグインに変換するときに必要．</li></ul><p>色々書くのが面倒で動画も作ったので，暇な人は見てください．</p><p><a href="https://www.youtube.com/watch?v=vZEgpgHGI-A&t=17s">https://www.youtube.com/watch?v=vZEgpgHGI-A&t=17s</a></p><p>動画ではPowerShellを使ってますが，私はzsh (+tmux+emacs) が好きなので，基本 <a href=https://www.msys2.org/>MSYS2</a> で開発してます．</p><h2 id=エディタ>エディタ</h2><p>拘りがなければ <a href=https://github.com/Pure-D/code-d>VSCode の D 言語拡張</a> を入れるのが一番いいと思います．私はemacsが好きなので使ってませんが．</p><p>とにかくEmacs対応が一番大変でした．D言語での補完などはDCDが一般的なツールで，それをもとにLSPなどが整備されているようですが，現状VSCode以外で動かせず (Linuxでもできなかった)．結局いつもLinuxで使ってるDCDの薄いラッパーである company-dcd に Windows 特有の問題 (DUBパッケージの場所，パスの文法，CR改行) を対処するパッチをあてて使いました．正確には company-dcd が依存してる flycheck-dmd-dub というパッケージにもパッチが必要です．</p><ul><li><a href=https://github.com/klknn/flycheck-dmd-dub/tree/fix-cygwin>https://github.com/klknn/flycheck-dmd-dub/tree/fix-cygwin</a></li><li><a href=https://github.com/klknn/company-dcd/tree/fix-cygwin>https://github.com/klknn/company-dcd/tree/fix-cygwin</a></li></ul><p>上記のパッケージにelispのパスを通して，こんな感じで設定してます．</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-elisp data-lang=elisp><span style=display:flex><span>(add-to-list <span style=color:#e6db74>&#39;load-path</span> <span style=color:#e6db74>&#34;flycheck-dmd-dubのパス&#34;</span>)
+</span></span><span style=display:flex><span>(add-to-list <span style=color:#e6db74>&#39;load-path</span> <span style=color:#e6db74>&#34;company-dcdのパス&#34;</span>)
+</span></span><span style=display:flex><span>(add-hook <span style=color:#e6db74>&#39;d-mode-hook</span> <span style=color:#e6db74>&#39;company-dcd-mode</span>)
+</span></span><span style=display:flex><span>(setq company-dcd-client-execulable <span style=color:#e6db74>&#34;dcd-client.exeのパス&#34;</span>)
+</span></span><span style=display:flex><span>(setq company-dcd-server-execulable <span style=color:#e6db74>&#34;dcd-server.exeのパス&#34;</span>)
+</span></span></code></pre></div><p>こんな風にcompanyによる補完や <code>C-c .</code> による定義ジャンプが動くはずです．</p><p><img src=/emacs-company-dcd.png alt=emacs-company-dcd.png></p><p>とりあえず <a href=https://github.com/atilaneves/flycheck-dmd-dub/pull/15>flycheck-dmd-dub に PR</a> を出しました，もし無事マージされたら company-dcd にもPRしたいと思います．</p><p>とても久しぶりにelisp書きましたが，シェルスクリプトばりに雑に書けてインタラクティブに動作できるので気持ちいいなと思いました．この適当にhackして治せる点が，他のエディタにない醍醐味だと思います．もしWindowsでemacsがうまく動かなかったらブチ切れてMacを買っていたかもしれません(そっちで動く保証はないですが)．現在Macは持っていないのでサポートする予定ないです．</p>Copyright © klknn All Rights Reserved.</body></html>

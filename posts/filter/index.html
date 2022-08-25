@@ -1,66 +1,12 @@
-<!doctype html><html>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<title>デジタルフィルタの実装</title>
-<link rel=stylesheet type=text/css href=/main.css>
-<script>MathJax={tex:{tags:'ams',inlineMath:[['$','$'],['\\(','\\)']]}}</script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script>
-</head>
-<body>
-<a href=/>klknn log</a> /
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>デジタルフィルタの実装</title><style>@media(prefers-color-scheme:dark){body{background-color:#222;color:#ddd}a:link{color:#88c}a:visited{color:#bbc}a:hover{color:#f88}a:active{color:#f80}}h1,h2,h3,h4,h5,h6{margin:2rem auto 1rem;max-width:50rem}.toc{max-width:45rem;padding:1rem;border:dotted}p,.highlight,.gist-file,figure,div,hr{margin:1rem auto;max-width:50rem;width:90%}blockquote{margin:1rem auto;max-width:45rem;font-style:italic;border-left:solid 5px}ul,li{margin:.75rem auto;max-width:50rem}img{width:100%}table,th,td{border-collapse:collapse;border:1px solid;line-height:1.5;padding:10px;border-left:none;border-right:none;margin:1rem auto;max-width:50rem}figcaption{text-align:center;font-style:italic}.index-date{text-align:right;font-style:italic}pre{overflow:scroll}</style><script>MathJax={tex:{tags:"ams",inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js></script></head><body><a href=/>klknn log</a> /
 <a href=/posts/>posts</a> /
 <a href=/tags/>tags</a> /
 <a href=/about/>about</a> /
-<a href=/index.xml>feed</a>
-<h1>デジタルフィルタの実装</h1>
-<ul>
-date: 2021-02-22 23:24:12 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/filter.md>edit</a>
-</ul>
-<ul>
-tags: <a href=/tags/dsp/>dsp</a>
-<a href=/tags/lang-ja/>lang-ja</a>
-</ul>
-<div class=toc>
-Table of contents
-<nav id=TableOfContents>
-<ul>
-<li><a href=#デジタルフィルタの定義>デジタルフィルタの定義</a></li>
-<li><a href=#フィルタ設計の流れ>フィルタ設計の流れ</a></li>
-<li><a href=#butterworth-フィルタの理論>Butterworth フィルタの理論</a>
-<ul>
-<li><a href=#1-pole-low-pass-filter-lpf-6dboct>1-pole Low Pass Filter (LPF) 6db/oct</a></li>
-<li><a href=#1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</a></li>
-<li><a href=#2-pole-low-pass-filter-lpf-12dboct>2-pole Low Pass Filter (LPF) 12db/oct</a></li>
-<li><a href=#2-pole-high-pass-filter-hpf-12dboct>2-pole High Pass Filter (HPF) 12db/oct</a></li>
-<li><a href=#2-pole-band-pass-filter-bpf-12dboct>2-pole Band Pass Filter (BPF) 12db/oct</a></li>
-</ul>
-</li>
-<li><a href=#実装におけるフィルタ係数-pythonによる自動導出>実装におけるフィルタ係数 (pythonによる自動導出)</a></li>
-<li><a href=#メモ疑問>メモ・疑問</a></li>
-</ul>
-</nav>
-</div>
-<p><a href=https://github.com/klknn/synth2/commit/e8ee1bc4a237c5b2c5c388d2fab7a3fb1977c26a>自作シンセにLPFを実装したとき</a> の備忘録。</p>
-<p>記号のリスト</p>
-<ul>
-<li>$j$: 虚数</li>
-<li>$\omega$: 各周波数。周波数 (Hz) に $2\pi$ をかけたもの</li>
-<li>$T$: サンプリング周期、サンプリング周波数の逆数</li>
-<li>$\omega_0$: カットオフ角周波数</li>
-<li>$Q$: レゾナンス (Quality Factorとも呼ぶ) $Q = \sqrt{1/2}$ 以上で、 $\omega_0$ にピークが立つ</li>
-<li>$x[n]$: 時刻 $n$ におけるフィルタの入力サンプル</li>
-<li>$y[n]$: 時刻 $n$ におけるフィルタの出力サンプル</li>
-<li>$a_t$: $t$ 時刻前の出力にかかるフィルタ係数(これをIIRフィルタと呼ぶ)</li>
-<li>$b_t$: $t$ 時刻前の入力にかかるフィルタ係数(これをFIRフィルタと呼ぶ)</li>
-</ul>
-<h2 id=デジタルフィルタの定義>デジタルフィルタの定義</h2>
-<p>一般的なフルIIRフィルタ (IIRおよびFIRフィルタも含む) は時間ドメインでは入出力信号 $x, y$ にそれぞれフィルタ係数 $a, b$ をかけた畳み込みで実装できる:
+<a href=/index.xml>feed</a><h1>デジタルフィルタの実装</h1><ul>date: 2021-02-22 23:24:12 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/filter.md>edit</a></ul><ul>tags: <a href=/tags/dsp/>dsp</a>
+<a href=/tags/lang-ja/>lang-ja</a></ul><div class=toc>Table of contents<nav id=TableOfContents><ul><li><a href=#デジタルフィルタの定義>デジタルフィルタの定義</a></li><li><a href=#フィルタ設計の流れ>フィルタ設計の流れ</a></li><li><a href=#butterworth-フィルタの理論>Butterworth フィルタの理論</a><ul><li><a href=#1-pole-low-pass-filter-lpf-6dboct>1-pole Low Pass Filter (LPF) 6db/oct</a></li><li><a href=#1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</a></li><li><a href=#2-pole-low-pass-filter-lpf-12dboct>2-pole Low Pass Filter (LPF) 12db/oct</a></li><li><a href=#2-pole-high-pass-filter-hpf-12dboct>2-pole High Pass Filter (HPF) 12db/oct</a></li><li><a href=#2-pole-band-pass-filter-bpf-12dboct>2-pole Band Pass Filter (BPF) 12db/oct</a></li></ul></li><li><a href=#実装におけるフィルタ係数-pythonによる自動導出>実装におけるフィルタ係数 (pythonによる自動導出)</a></li><li><a href=#メモ疑問>メモ・疑問</a></li></ul></nav></div><p><a href=https://github.com/klknn/synth2/commit/e8ee1bc4a237c5b2c5c388d2fab7a3fb1977c26a>自作シンセにLPFを実装したとき</a> の備忘録。</p><p>記号のリスト</p><ul><li>$j$: 虚数</li><li>$\omega$: 各周波数。周波数 (Hz) に $2\pi$ をかけたもの</li><li>$T$: サンプリング周期、サンプリング周波数の逆数</li><li>$\omega_0$: カットオフ角周波数</li><li>$Q$: レゾナンス (Quality Factorとも呼ぶ) $Q = \sqrt{1/2}$ 以上で、 $\omega_0$ にピークが立つ</li><li>$x[n]$: 時刻 $n$ におけるフィルタの入力サンプル</li><li>$y[n]$: 時刻 $n$ におけるフィルタの出力サンプル</li><li>$a_t$: $t$ 時刻前の出力にかかるフィルタ係数(これをIIRフィルタと呼ぶ)</li><li>$b_t$: $t$ 時刻前の入力にかかるフィルタ係数(これをFIRフィルタと呼ぶ)</li></ul><h2 id=デジタルフィルタの定義>デジタルフィルタの定義</h2><p>一般的なフルIIRフィルタ (IIRおよびFIRフィルタも含む) は時間ドメインでは入出力信号 $x, y$ にそれぞれフィルタ係数 $a, b$ をかけた畳み込みで実装できる:
 \begin{align}
 y[n] = \sum_{t=0}^{B} b_t x[n - t] - \sum_{t=1}^{A} a_t y[n - t]
-\end{align}</p>
-<p>IIRフィルタが所望の周波数特性をもつように定義するにはZ変換・ラプラス変換・フーリエ変換を用いる。
+\end{align}</p><p>IIRフィルタが所望の周波数特性をもつように定義するにはZ変換・ラプラス変換・フーリエ変換を用いる。
 先の時間領域の等式の両辺を入力 $x[n]$ で割った入出力比を伝達関数(transfer function)と呼ぶ。さらに $x, y$ をZ変換とよばれる下記の置き換え
 \begin{align}
 X(z) = \sum_{t} x[t] z^{-t}
@@ -77,29 +23,7 @@ H(z) &= \frac{Y(z)}{X(z)}
 \label{eq:laplace}
 s &= \frac{2}{T} \frac{z-1}{z+1}, \newline
 \end{align}
-ラプラス領域を介することで、さらにフーリエ変換として $s = j \omega$ を代入すれば周波数や位相の特性を得られる。絶対値をとれば $|H(j \omega)|$ が周波数ごとの音量 (db/octの傾きとかわかる), 位相をとれば $\angle{H(j \omega)}$ が周波数ごとの位相応答 (線形位相かなどわかる) を表す関数となる。</p>
-<h2 id=フィルタ設計の流れ>フィルタ設計の流れ</h2>
-<p>繰り返しになるが上記の各種変換により、デジタルの実装（離散時間領域）と、位相周波数応答の特性（フーリエ領域）を行き来することができる。ここでは触れないが、一時的にでてくるラプラス変換もアナログ回路との対応があり勉強すると楽しい。</p>
-<ol>
-<li>離散時間 (コード実装の世界) $x[t]$</li>
-<li>Z変換 (信号処理における離散と連続の出入口) $X(z)$</li>
-<li>ラプラス変換 (アナログ回路との親和性) $X(s)$</li>
-<li>フーリエ変換 (位相・周波数の解析) $X(j\omega)$</li>
-</ol>
-<p>ここまでの話を 4 から 1 に逆にたどると、デジタルフィルタの設計の流れとなる。つまり所望の位相・周波数特性を考え、逆変換により等価なフィルタ係数 $(a_t, b_t)$ を導出するという作業である。</p>
-<h2 id=butterworth-フィルタの理論>Butterworth フィルタの理論</h2>
-<p>代表的なフィルタとしてButterworthフィルタが音響処理では普及している。他のフィルタと比べてカットオフ周波数のロールオフが緩やかでカットオフ後に荒ぶらない性質がある。アナログ回路に基づいているので多くの場合はラプラス領域での伝達関数が示される。デジタルフィルタとして実装する場合に必要である、Z変換した伝達関数は数式記号処理ソフトを使って式 \eqref{eq:laplace} を代入すると得られる。具体例は後述する実験結果か、以下の本の 8.10 節でも確認できる</p>
-<blockquote>
-<p>Sean Luke, 2019, Computational Music Synthesis, zeroth edition, available for free at <a href=http://cs.gmu.edu/~sean/book/synthesis/>http://cs.gmu.edu/~sean/book/synthesis/</a></p>
-</blockquote>
-<p>より一般的な Butterworth フィルタについてはこの PDF が詳しい (余談だが、著者はNIのMassiveやReaktorの開発者らしい <a href=https://www.linkedin.com/in/vadim-zavalishin-451bb812b>linkedin</a>)</p>
-<blockquote>
-<p>Vadim Zavalishin, The Art of VA Filter Design <a href=https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_2.1.0.pdf>https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_2.1.0.pdf</a></p>
-</blockquote>
-<p>この辺の話は VA Filter Design の2章がよくまとまっている。それでは実際に使われるLPF/HPF/BPFを導出する。</p>
-<h3 id=1-pole-low-pass-filter-lpf-6dboct>1-pole Low Pass Filter (LPF) 6db/oct</h3>
-<p>天下り的に定義を覚えてもいいが、自分の中で納得する導出を考えてみる。</p>
-<p>人間には音の高さや大きさが対数スケールで感じる(例えば倍の周波数が1オクターブ上として聞こえる)ので、指数的に周波数を倍にすると、音量が半分になるようなLPフィルタがほしい。そのためには周波数の逆数みたいな周波数応答がいい。
+ラプラス領域を介することで、さらにフーリエ変換として $s = j \omega$ を代入すれば周波数や位相の特性を得られる。絶対値をとれば $|H(j \omega)|$ が周波数ごとの音量 (db/octの傾きとかわかる), 位相をとれば $\angle{H(j \omega)}$ が周波数ごとの位相応答 (線形位相かなどわかる) を表す関数となる。</p><h2 id=フィルタ設計の流れ>フィルタ設計の流れ</h2><p>繰り返しになるが上記の各種変換により、デジタルの実装（離散時間領域）と、位相周波数応答の特性（フーリエ領域）を行き来することができる。ここでは触れないが、一時的にでてくるラプラス変換もアナログ回路との対応があり勉強すると楽しい。</p><ol><li>離散時間 (コード実装の世界) $x[t]$</li><li>Z変換 (信号処理における離散と連続の出入口) $X(z)$</li><li>ラプラス変換 (アナログ回路との親和性) $X(s)$</li><li>フーリエ変換 (位相・周波数の解析) $X(j\omega)$</li></ol><p>ここまでの話を 4 から 1 に逆にたどると、デジタルフィルタの設計の流れとなる。つまり所望の位相・周波数特性を考え、逆変換により等価なフィルタ係数 $(a_t, b_t)$ を導出するという作業である。</p><h2 id=butterworth-フィルタの理論>Butterworth フィルタの理論</h2><p>代表的なフィルタとしてButterworthフィルタが音響処理では普及している。他のフィルタと比べてカットオフ周波数のロールオフが緩やかでカットオフ後に荒ぶらない性質がある。アナログ回路に基づいているので多くの場合はラプラス領域での伝達関数が示される。デジタルフィルタとして実装する場合に必要である、Z変換した伝達関数は数式記号処理ソフトを使って式 \eqref{eq:laplace} を代入すると得られる。具体例は後述する実験結果か、以下の本の 8.10 節でも確認できる</p><blockquote><p>Sean Luke, 2019, Computational Music Synthesis, zeroth edition, available for free at <a href=http://cs.gmu.edu/~sean/book/synthesis/>http://cs.gmu.edu/~sean/book/synthesis/</a></p></blockquote><p>より一般的な Butterworth フィルタについてはこの PDF が詳しい (余談だが、著者はNIのMassiveやReaktorの開発者らしい <a href=https://www.linkedin.com/in/vadim-zavalishin-451bb812b>linkedin</a>)</p><blockquote><p>Vadim Zavalishin, The Art of VA Filter Design <a href=https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_2.1.0.pdf>https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_2.1.0.pdf</a></p></blockquote><p>この辺の話は VA Filter Design の2章がよくまとまっている。それでは実際に使われるLPF/HPF/BPFを導出する。</p><h3 id=1-pole-low-pass-filter-lpf-6dboct>1-pole Low Pass Filter (LPF) 6db/oct</h3><p>天下り的に定義を覚えてもいいが、自分の中で納得する導出を考えてみる。</p><p>人間には音の高さや大きさが対数スケールで感じる(例えば倍の周波数が1オクターブ上として聞こえる)ので、指数的に周波数を倍にすると、音量が半分になるようなLPフィルタがほしい。そのためには周波数の逆数みたいな周波数応答がいい。
 \begin{align}
 |H(j\omega)| &= \frac{1}{w},
 \end{align}
@@ -111,155 +35,118 @@ s &= \frac{2}{T} \frac{z-1}{z+1}, \newline
 \begin{align}
 H(s) &= \frac{1}{s + 1}.
 \end{align}
-さらに $s = s' / \omega_0$ を代入することで、今度は対数スケールで周波数軸を左右に平行移動できる。これは単なる変数変換なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
+さらに $s = s&rsquo; / \omega_0$ を代入することで、今度は対数スケールで周波数軸を左右に平行移動できる。これは単なる変数変換なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
 \begin{align}
 H(s) = \frac{1}{\frac{s}{\omega_0} + 1}
-\end{align}</p>
-<p>この式は 1 pole (分母 = 0の方程式が1つの解をもつ) であり、倍の周波数(1 octave上) で0.5倍の音量つまりデシベル(db)でいうと $20 \log_{10} 0.5 \approx -6$ db/octave で高域が減衰するという。</p>
-<h3 id=1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</h3>
-<p>LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
+\end{align}</p><p>この式は 1 pole (分母 = 0の方程式が1つの解をもつ) であり、倍の周波数(1 octave上) で0.5倍の音量つまりデシベル(db)でいうと $20 \log_{10} 0.5 \approx -6$ db/octave で高域が減衰するという。</p><h3 id=1-pole-high-pass-filter-hpf-6dboct>1-pole High Pass Filter (HPF) 6db/oct</h3><p>LPFと同じような議論で、$s / \omega_0$ の代わりに二倍低い周波数が二倍小さいレベルとなるよう $\omega_0 / s$が使えることがわかる。代入するとこのような伝達関数が得られる:
 \begin{align}
 H(s) = \frac{\frac{s}{\omega_0}}{\frac{s}{\omega_0} + 1}
-\end{align}</p>
-<h3 id=2-pole-low-pass-filter-lpf-12dboct>2-pole Low Pass Filter (LPF) 12db/oct</h3>
-<p>単純に1-pole LPFを二回かけると 2 pole (分母 = 0の方程式が2つの解をもつ) で 12db/octave で高域が減衰するLPFになる。フィルタは畳み込みなので、そのラプラス変換は積つまり、もとのLPFの二乗になる。</p>
-<p>単純に二回かけるかわりに、2-poleではレゾナンス $Q$ により周波数ピークをたたせることができる。
+\end{align}</p><h3 id=2-pole-low-pass-filter-lpf-12dboct>2-pole Low Pass Filter (LPF) 12db/oct</h3><p>単純に1-pole LPFを二回かけると 2 pole (分母 = 0の方程式が2つの解をもつ) で 12db/octave で高域が減衰するLPFになる。フィルタは畳み込みなので、そのラプラス変換は積つまり、もとのLPFの二乗になる。</p><p>単純に二回かけるかわりに、2-poleではレゾナンス $Q$ により周波数ピークをたたせることができる。
 \begin{align}
 H(s) = \frac{1}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
 \end{align}
-TODO: なぜ Q でピークがたつかの説明 (天下り的に周波数応答みればよいが、直感的な説明があるとよい)。気になる人は VA Filter Designの 4.2 Resonanceを読むとよい。</p>
-<h3 id=2-pole-high-pass-filter-hpf-12dboct>2-pole High Pass Filter (HPF) 12db/oct</h3>
-<p>上に同じ性質をもつが逆に低域が減衰する。</p>
-<p>\begin{align}
+TODO: なぜ Q でピークがたつかの説明 (天下り的に周波数応答みればよいが、直感的な説明があるとよい)。気になる人は VA Filter Designの 4.2 Resonanceを読むとよい。</p><h3 id=2-pole-high-pass-filter-hpf-12dboct>2-pole High Pass Filter (HPF) 12db/oct</h3><p>上に同じ性質をもつが逆に低域が減衰する。</p><p>\begin{align}
 H(s) = \frac{\frac{s^2}{\omega_0^2}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
-\end{align}</p>
-<h3 id=2-pole-band-pass-filter-bpf-12dboct>2-pole Band Pass Filter (BPF) 12db/oct</h3>
-<p>上に同じ性質を持つが高域と低域の両方が減衰する。</p>
-<p>\begin{align}
+\end{align}</p><h3 id=2-pole-band-pass-filter-bpf-12dboct>2-pole Band Pass Filter (BPF) 12db/oct</h3><p>上に同じ性質を持つが高域と低域の両方が減衰する。</p><p>\begin{align}
 H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q} + 1}
-\end{align}</p>
-<p>LPF, HPFとBPFの伝達関数を全部足したら1になるな、と思った人は筋が良い。ラプラス変換には線形性があるので、実際の各フィルタの出力を足し合わせてもとに戻るように、何もしない伝達関数 $H(s)=1$ が現れる。</p>
-<h2 id=実装におけるフィルタ係数-pythonによる自動導出>実装におけるフィルタ係数 (pythonによる自動導出)</h2>
-<p>で、結局冒頭のフィルタ係数 $a, b$ は何なんだという。</p>
-<p>ここまで得られたラプラス領域の伝達関数を式 \eqref{eq:laplace} を用いたZ変換することで冒頭の離散時間領域の多項式が求まり、実装に必要なデジタルフィルタの係数が得られる。1-poleくらいなら手計算してもいいが、2-poleになるとしんどいので面倒なことはPython (の数式処理ライブラリであるSymPy) にやらせよう。</p>
-<p>コード <a href=/filter_coeff.py>filter_coeff.py</a>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=color:#75715e># requires version &#39;1.7.1</span>
-<span style=color:#f92672>from</span> sympy <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
-
-s <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;s&#39;</span>)
-z <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;z&#39;</span>)
-Q <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;Q&#39;</span>)    <span style=color:#75715e># resonance</span>
-T <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;T&#39;</span>)    <span style=color:#75715e># sampling interval</span>
-w0 <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;w0&#39;</span>)  <span style=color:#75715e># cutoff freq</span>
-
-<span style=color:#75715e># z2s = 2 / T * (z - 1) / (z + 1)</span>
-s2z <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> T <span style=color:#f92672>*</span> (z <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>/</span> (z <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>)
-
-<span style=color:#66d9ef>def</span> <span style=color:#a6e22e>print_coeff</span>(hs):
-    hz <span style=color:#f92672>=</span> simplify(hs<span style=color:#f92672>.</span>subs(s, s2z))  <span style=color:#75715e># Z transform</span>
-    npole <span style=color:#f92672>=</span> degree(denom(hs), s)
-    print(<span style=color:#e6db74>&#34;=== Transfer function ===&#34;</span>)
-    print(<span style=color:#e6db74>&#34;H(s) =&#34;</span>, hs)  <span style=color:#75715e># transfer function in Laplace domain</span>
-    print(<span style=color:#e6db74>&#34;H(z) =&#34;</span>, hz)  <span style=color:#75715e># transfer function in Z domain</span>
-    print(<span style=color:#e6db74>&#34;#pole =&#34;</span>, npole)
-    print(<span style=color:#e6db74>&#34;=== Filter coeffients ===&#34;</span>)
-    <span style=color:#75715e># FIR coeff</span>
-    dhz <span style=color:#f92672>=</span> collect(expand(denom(hz) <span style=color:#f92672>*</span> z <span style=color:#f92672>**</span> <span style=color:#f92672>-</span>npole), z)
-    nhz <span style=color:#f92672>=</span> collect(expand(numer(hz) <span style=color:#f92672>*</span> z <span style=color:#f92672>**</span> <span style=color:#f92672>-</span>npole), z)
-    a0 <span style=color:#f92672>=</span> dhz<span style=color:#f92672>.</span>coeff(z, <span style=color:#ae81ff>0</span>)  <span style=color:#75715e># to normalize a0 = 1</span>
-    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(npole <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>):
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;b</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74> =&#34;</span>, nhz<span style=color:#f92672>.</span>coeff(z, <span style=color:#f92672>-</span>i) <span style=color:#f92672>/</span> a0)
-    <span style=color:#75715e># IIR coeff</span>
-    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>1</span>, npole <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>):
-        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;a</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74> =&#34;</span>, dhz<span style=color:#f92672>.</span>coeff(z, <span style=color:#f92672>-</span>i) <span style=color:#f92672>/</span> a0)
-
-
-print(<span style=color:#e6db74>&#34;Filter: 1-pole LPF&#34;</span>)
-print_coeff(hs <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>/</span> (s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
-print()
-print(<span style=color:#e6db74>&#34;Filter: 1-pole HPF&#34;</span>)
-print_coeff(hs <span style=color:#f92672>=</span> s <span style=color:#f92672>/</span> (s <span style=color:#f92672>+</span> w0))
-print()
-print(<span style=color:#e6db74>&#34;Filter: 2-pole LPF&#34;</span>)
-print_coeff(hs <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>/</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
-print()
-print(<span style=color:#e6db74>&#34;Filter: 2-pole HPF&#34;</span>)
-print_coeff(hs <span style=color:#f92672>=</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>) <span style=color:#f92672>/</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
-print()
-print(<span style=color:#e6db74>&#34;Filter: 2-pole BPF&#34;</span>)
-print_coeff(hs <span style=color:#f92672>=</span> (s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q) <span style=color:#f92672>/</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
-
-
-</code></pre></div>
-</p>
-<p>結果 <a href=/filter_coeff.txt>filter_coeff.txt</a>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt>Filter: 1-pole LPF
-=== Transfer function ===
-H(s) = 1/(s/w0 + 1)
-H(z) = T*w0*(z + 1)/(T*w0*(z + 1) + 2*z - 2)
-#pole = 1
-=== Filter coeffients ===
-b0 = T*w0/(T*w0 + 2)
-b1 = T*w0/(T*w0 + 2)
-a1 = (T*w0 - 2)/(T*w0 + 2)
-
-Filter: 1-pole HPF
-=== Transfer function ===
-H(s) = s/(s + w0)
-H(z) = 2*(z - 1)/(T*w0*(z + 1) + 2*z - 2)
-#pole = 1
-=== Filter coeffients ===
-b0 = 2/(T*w0 + 2)
-b1 = -2/(T*w0 + 2)
-a1 = (T*w0 - 2)/(T*w0 + 2)
-
-Filter: 2-pole LPF
-=== Transfer function ===
-H(s) = 1/(s**2/w0**2 + 1 + s/(Q*w0))
-H(z) = Q*T**2*w0**2*(z + 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
-#pole = 2
-=== Filter coeffients ===
-b0 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b1 = 2*Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b2 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-
-Filter: 2-pole HPF
-=== Transfer function ===
-H(s) = s**2/(w0**2*(s**2/w0**2 + 1 + s/(Q*w0)))
-H(z) = 4*Q*(z - 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
-#pole = 2
-=== Filter coeffients ===
-b0 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b1 = -8*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b2 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-
-Filter: 2-pole BPF
-=== Transfer function ===
-H(s) = s/(Q*w0*(s**2/w0**2 + 1 + s/(Q*w0)))
-H(z) = 2*T*w0*(z - 1)*(z + 1)/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
-#pole = 2
-=== Filter coeffients ===
-b0 = 2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b1 = 0
-b2 = -2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-
-</code></pre></div>
-</p>
-<p>ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった&mldr;。ちなみに古いバージョンのsympyでやるとうまくいかないので注意。</p>
-<h2 id=メモ疑問>メモ・疑問</h2>
-<ul>
-<li>リアルタイム性は犠牲になるが、位相が変化しない線形位相フィルタとはどういうものか</li>
-<li>MoogやTB303に搭載されるアナログLPFは、ここでとりあげたButterworthとは異なる (<a href=https://github.com/klknn/synth2/blob/c3d06e87b10fe31e6b68d060b1e5c8788f383d9d/tool/filter_coeff.py#L62-L73>コード</a>)。アナログ回路面からも、どのようにして設計されるか考察したい。</li>
-<li>1-pole フィルタはレゾナンスをもたない?</li>
-<li>全く周波数を変化しない代わりに周波数ごとの位相を変える All Pass Filterというものがある。周波数ごとに音の遅れ方を変えたいリバーブなどで使う</li>
-<li>より一般化されたButterworth filter自体の定義とは?私にはまだN-poleのLPFとかがどういう形なのか完全に理解できてない</li>
-</ul>
-Copyright © klknn All Rights Reserved.
-</body>
-</html>
+\end{align}</p><p>LPF, HPFとBPFの伝達関数を全部足したら1になるな、と思った人は筋が良い。ラプラス変換には線形性があるので、実際の各フィルタの出力を足し合わせてもとに戻るように、何もしない伝達関数 $H(s)=1$ が現れる。</p><h2 id=実装におけるフィルタ係数-pythonによる自動導出>実装におけるフィルタ係数 (pythonによる自動導出)</h2><p>で、結局冒頭のフィルタ係数 $a, b$ は何なんだという。</p><p>ここまで得られたラプラス領域の伝達関数を式 \eqref{eq:laplace} を用いたZ変換することで冒頭の離散時間領域の多項式が求まり、実装に必要なデジタルフィルタの係数が得られる。1-poleくらいなら手計算してもいいが、2-poleになるとしんどいので面倒なことはPython (の数式処理ライブラリであるSymPy) にやらせよう。</p><p>コード <a href=/filter_coeff.py>filter_coeff.py</a><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-py data-lang=py><span style=display:flex><span><span style=color:#75715e># requires version &#39;1.7.1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> sympy <span style=color:#f92672>import</span> <span style=color:#f92672>*</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>s <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;s&#39;</span>)
+</span></span><span style=display:flex><span>z <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;z&#39;</span>)
+</span></span><span style=display:flex><span>Q <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;Q&#39;</span>)    <span style=color:#75715e># resonance</span>
+</span></span><span style=display:flex><span>T <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;T&#39;</span>)    <span style=color:#75715e># sampling interval</span>
+</span></span><span style=display:flex><span>w0 <span style=color:#f92672>=</span> Symbol(<span style=color:#e6db74>&#39;w0&#39;</span>)  <span style=color:#75715e># cutoff freq</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># z2s = 2 / T * (z - 1) / (z + 1)</span>
+</span></span><span style=display:flex><span>s2z <span style=color:#f92672>=</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> T <span style=color:#f92672>*</span> (z <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>/</span> (z <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>print_coeff</span>(hs):
+</span></span><span style=display:flex><span>    hz <span style=color:#f92672>=</span> simplify(hs<span style=color:#f92672>.</span>subs(s, s2z))  <span style=color:#75715e># Z transform</span>
+</span></span><span style=display:flex><span>    npole <span style=color:#f92672>=</span> degree(denom(hs), s)
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;=== Transfer function ===&#34;</span>)
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;H(s) =&#34;</span>, hs)  <span style=color:#75715e># transfer function in Laplace domain</span>
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;H(z) =&#34;</span>, hz)  <span style=color:#75715e># transfer function in Z domain</span>
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;#pole =&#34;</span>, npole)
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;=== Filter coeffients ===&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#75715e># FIR coeff</span>
+</span></span><span style=display:flex><span>    dhz <span style=color:#f92672>=</span> collect(expand(denom(hz) <span style=color:#f92672>*</span> z <span style=color:#f92672>**</span> <span style=color:#f92672>-</span>npole), z)
+</span></span><span style=display:flex><span>    nhz <span style=color:#f92672>=</span> collect(expand(numer(hz) <span style=color:#f92672>*</span> z <span style=color:#f92672>**</span> <span style=color:#f92672>-</span>npole), z)
+</span></span><span style=display:flex><span>    a0 <span style=color:#f92672>=</span> dhz<span style=color:#f92672>.</span>coeff(z, <span style=color:#ae81ff>0</span>)  <span style=color:#75715e># to normalize a0 = 1</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(npole <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>):
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;b</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74> =&#34;</span>, nhz<span style=color:#f92672>.</span>coeff(z, <span style=color:#f92672>-</span>i) <span style=color:#f92672>/</span> a0)
+</span></span><span style=display:flex><span>    <span style=color:#75715e># IIR coeff</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> i <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>1</span>, npole <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>):
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;a</span><span style=color:#e6db74>{</span>i<span style=color:#e6db74>}</span><span style=color:#e6db74> =&#34;</span>, dhz<span style=color:#f92672>.</span>coeff(z, <span style=color:#f92672>-</span>i) <span style=color:#f92672>/</span> a0)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Filter: 1-pole LPF&#34;</span>)
+</span></span><span style=display:flex><span>print_coeff(hs <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>/</span> (s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
+</span></span><span style=display:flex><span>print()
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Filter: 1-pole HPF&#34;</span>)
+</span></span><span style=display:flex><span>print_coeff(hs <span style=color:#f92672>=</span> s <span style=color:#f92672>/</span> (s <span style=color:#f92672>+</span> w0))
+</span></span><span style=display:flex><span>print()
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Filter: 2-pole LPF&#34;</span>)
+</span></span><span style=display:flex><span>print_coeff(hs <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>/</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
+</span></span><span style=display:flex><span>print()
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Filter: 2-pole HPF&#34;</span>)
+</span></span><span style=display:flex><span>print_coeff(hs <span style=color:#f92672>=</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>) <span style=color:#f92672>/</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
+</span></span><span style=display:flex><span>print()
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>&#34;Filter: 2-pole BPF&#34;</span>)
+</span></span><span style=display:flex><span>print_coeff(hs <span style=color:#f92672>=</span> (s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q) <span style=color:#f92672>/</span> (s<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>/</span> w0<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> s <span style=color:#f92672>/</span> w0 <span style=color:#f92672>/</span> Q <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>))
+</span></span></code></pre></div></p><p>結果 <a href=/filter_coeff.txt>filter_coeff.txt</a><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-txt data-lang=txt><span style=display:flex><span>Filter: 1-pole LPF
+</span></span><span style=display:flex><span>=== Transfer function ===
+</span></span><span style=display:flex><span>H(s) = 1/(s/w0 + 1)
+</span></span><span style=display:flex><span>H(z) = T*w0*(z + 1)/(T*w0*(z + 1) + 2*z - 2)
+</span></span><span style=display:flex><span>#pole = 1
+</span></span><span style=display:flex><span>=== Filter coeffients ===
+</span></span><span style=display:flex><span>b0 = T*w0/(T*w0 + 2)
+</span></span><span style=display:flex><span>b1 = T*w0/(T*w0 + 2)
+</span></span><span style=display:flex><span>a1 = (T*w0 - 2)/(T*w0 + 2)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Filter: 1-pole HPF
+</span></span><span style=display:flex><span>=== Transfer function ===
+</span></span><span style=display:flex><span>H(s) = s/(s + w0)
+</span></span><span style=display:flex><span>H(z) = 2*(z - 1)/(T*w0*(z + 1) + 2*z - 2)
+</span></span><span style=display:flex><span>#pole = 1
+</span></span><span style=display:flex><span>=== Filter coeffients ===
+</span></span><span style=display:flex><span>b0 = 2/(T*w0 + 2)
+</span></span><span style=display:flex><span>b1 = -2/(T*w0 + 2)
+</span></span><span style=display:flex><span>a1 = (T*w0 - 2)/(T*w0 + 2)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Filter: 2-pole LPF
+</span></span><span style=display:flex><span>=== Transfer function ===
+</span></span><span style=display:flex><span>H(s) = 1/(s**2/w0**2 + 1 + s/(Q*w0))
+</span></span><span style=display:flex><span>H(z) = Q*T**2*w0**2*(z + 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
+</span></span><span style=display:flex><span>#pole = 2
+</span></span><span style=display:flex><span>=== Filter coeffients ===
+</span></span><span style=display:flex><span>b0 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>b1 = 2*Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>b2 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Filter: 2-pole HPF
+</span></span><span style=display:flex><span>=== Transfer function ===
+</span></span><span style=display:flex><span>H(s) = s**2/(w0**2*(s**2/w0**2 + 1 + s/(Q*w0)))
+</span></span><span style=display:flex><span>H(z) = 4*Q*(z - 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
+</span></span><span style=display:flex><span>#pole = 2
+</span></span><span style=display:flex><span>=== Filter coeffients ===
+</span></span><span style=display:flex><span>b0 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>b1 = -8*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>b2 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Filter: 2-pole BPF
+</span></span><span style=display:flex><span>=== Transfer function ===
+</span></span><span style=display:flex><span>H(s) = s/(Q*w0*(s**2/w0**2 + 1 + s/(Q*w0)))
+</span></span><span style=display:flex><span>H(z) = 2*T*w0*(z - 1)*(z + 1)/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
+</span></span><span style=display:flex><span>#pole = 2
+</span></span><span style=display:flex><span>=== Filter coeffients ===
+</span></span><span style=display:flex><span>b0 = 2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>b1 = 0
+</span></span><span style=display:flex><span>b2 = -2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style=display:flex><span>a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span></code></pre></div></p><p>ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった&mldr;。ちなみに古いバージョンのsympyでやるとうまくいかないので注意。</p><h2 id=メモ疑問>メモ・疑問</h2><ul><li>リアルタイム性は犠牲になるが、位相が変化しない線形位相フィルタとはどういうものか</li><li>MoogやTB303に搭載されるアナログLPFは、ここでとりあげたButterworthとは異なる (<a href=https://github.com/klknn/synth2/blob/c3d06e87b10fe31e6b68d060b1e5c8788f383d9d/tool/filter_coeff.py#L62-L73>コード</a>)。アナログ回路面からも、どのようにして設計されるか考察したい。</li><li>1-pole フィルタはレゾナンスをもたない?</li><li>全く周波数を変化しない代わりに周波数ごとの位相を変える All Pass Filterというものがある。周波数ごとに音の遅れ方を変えたいリバーブなどで使う</li><li>より一般化されたButterworth filter自体の定義とは?私にはまだN-poleのLPFとかがどういう形なのか完全に理解できてない</li></ul>Copyright © klknn All Rights Reserved.</body></html>

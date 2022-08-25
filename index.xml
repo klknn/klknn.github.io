@@ -1,76 +1,94 @@
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-08-24T23:32:31+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.90.1">Hugo</generator><id>https://klknn.github.io/</id><entry><title>はてなブログ的なfeedをHugoで生成</title><link href="https://klknn.github.io/posts/hugo_feed/"/><id>https://klknn.github.io/posts/hugo_feed/</id><published>2022-08-24T23:32:31+0900</published><updated>2022-08-24T23:32:31+0900</updated><summary type="html">RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-08-26T04:55:30+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>HugoにおけるCSSの埋め込みと後処理</title><link href="https://klknn.github.io/posts/hugo_embed_css/"/><id>https://klknn.github.io/posts/hugo_embed_css/</id><published>2022-08-26T04:55:30+0900</published><updated>2022-08-26T04:55:30+0900</updated><summary type="html">CSSを試行錯誤中なのですがブラウザのキャッシュが効いて反映されないため面倒だなと思い、Hugo の asset 管理を使ってHTMLに埋め込んでみました。 おまけに最小化やSCSSの導入など、思わぬ副次効果もありました。
+...</summary><content type="html"><![CDATA[<p>CSSを試行錯誤中なのですがブラウザのキャッシュが効いて反映されないため面倒だなと思い、Hugo の asset 管理を使ってHTMLに埋め込んでみました。
+おまけに最小化やSCSSの導入など、思わぬ副次効果もありました。</p>
+<h2 id="これまでの問題">これまでの問題</h2>
+<p>ここ最近の更新では、たびたびCSSを弄っていました。これまでは元ファイルを <code>/static/main.css</code> に置いてそのまま直接リンクを貼っていたのですが、リンクを介すことでブラウザのキャッシュが効いてしまい、 <code>$ hugo serve</code> をしているとき即座に反映されない悩みがありました。</p>
+<p>ついでに生のCSSって冗長で人間が書くものでは無いな&hellip;と思っていたのでどうせHugoを使って処理するなら&hellip;とSASS/SCSSに移行していきます。</p>
+<p>一方、埋め込むことで読み込みに時間がかかるのではという懸念もありますが、後処理がてら<code>hugo --minify</code>で最小化できます。これで普段は人間に読める形で試行錯誤できる上に、デプロイ時は最小化してるので良いところどりです。
+最終的に埋め込みが問題になれば <code>.RelURL</code> によるリンク生成も可能なのでキャッシュ効く形に戻すのも容易です。</p>
+<h2 id="scssの読み込み">SCSSの読み込み</h2>
+<p>というわけでHugoのasset管理を使って、HTMLに直接埋め込みます。 <code>/assets/main.scss</code> にファイルを移動した上で、このように読み込みます。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-Go" data-lang="Go"><span style="display:flex;"><span>    {{ <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">css</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">resources</span>.<span style="color:#a6e22e">Get</span> <span style="color:#e6db74">&#34;main.scss&#34;</span> | <span style="color:#a6e22e">resources</span>.<span style="color:#a6e22e">ToCSS</span> }}
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#a6e22e">style</span>&gt;
+</span></span><span style="display:flex;"><span>      {{ <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">css</span>.<span style="color:#a6e22e">Content</span> | <span style="color:#a6e22e">safeCSS</span> }}
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">/</span><span style="color:#a6e22e">style</span>&gt;
+</span></span></code></pre></div><p>でてくる関数の詳細は <a href="https://gohugo.io/categories/asset-management">https://gohugo.io/categories/asset-management</a> を読んでください。SCSSを使うには extended と書いてあるバイナリを使う必要があるので注意です。生成されたファイルは <code>/resources/_gen/*</code> に作られるので <code>.gitignore</code> などに含めておくと良いでしょう</p>
+<p>ちなみにSCSSはCSSと概ね互換性があるので、そのまま読めます。文法はここ　https://sass-lang.com/documentation/syntax より <a href="https://sass-lang.com/guide">https://sass-lang.com/guide</a> のほうが簡単にまとまってていいです。今回はとりあえず変数と演算を使ってページの幅とか調整しました。正直文法が気持ち悪いのであまり深追いしたくはないです。</p>
+<h2 id="まとめ">まとめ</h2>
+<p>気が変わっていにしえのHTML/CSS直書き原理主義にもどるかもしれませんが、いまのところMarkdown -&gt; HTML と SCSS -&gt; CSSと変換できるHugoに満足です。</p>]]></content></entry><entry><title>はてなブログ的なfeedをHugoで生成</title><link href="https://klknn.github.io/posts/hugo_feed/"/><id>https://klknn.github.io/posts/hugo_feed/</id><published>2022-08-24T23:32:31+0900</published><updated>2022-08-24T23:32:31+0900</updated><summary type="html">RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。
 ...</summary><content type="html"><![CDATA[<p>RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。
 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。</p>
 <h2 id="はてなのfeed">はてなのfeed</h2>
 <p>まずFeedlyで適当に普段読んでるhatenaブログをみてみると、取得してるURLが設定画面で把握できます。大抵は以下のようなXMLがでてきます:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;feed</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.w3.org/2005/Atom&#34;</span> <span style="color:#a6e22e">xml:lang=</span><span style="color:#e6db74">&#34;ja&#34;</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;title&gt;</span>・ｘ・ぼくののうみそ<span style="color:#f92672">&lt;/title&gt;</span>
-
-  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;https://bokunonoumiso.hatenablog.com/&#34;</span><span style="color:#f92672">/&gt;</span>
-  <span style="color:#f92672">&lt;updated&gt;</span>2022-08-09T12:41:41+09:00<span style="color:#f92672">&lt;/updated&gt;</span>
-  <span style="color:#f92672">&lt;author&gt;</span>
-    <span style="color:#f92672">&lt;name&gt;</span>bokunonoumiso<span style="color:#f92672">&lt;/name&gt;</span>
-  <span style="color:#f92672">&lt;/author&gt;</span>
-  <span style="color:#f92672">&lt;generator</span> <span style="color:#a6e22e">uri=</span><span style="color:#e6db74">&#34;https://blog.hatena.ne.jp/&#34;</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;149d375eb29bfc5c8439e961a2b85a&#34;</span><span style="color:#f92672">&gt;</span>Hatena::Blog<span style="color:#f92672">&lt;/generator&gt;</span>
-  <span style="color:#f92672">&lt;id&gt;</span>hatenablog://blog/6653812171403772804<span style="color:#f92672">&lt;/id&gt;</span>
-    <span style="color:#f92672">&lt;entry&gt;</span>
-        <span style="color:#f92672">&lt;title&gt;</span>高い車に乗って安い車を煽る<span style="color:#f92672">&lt;/title&gt;</span>
-        <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;https://bokunonoumiso.hatenablog.com/entry/2022/08/09/124141&#34;</span><span style="color:#f92672">/&gt;</span>
-        <span style="color:#f92672">&lt;id&gt;</span>hatenablog://entry/4207112889907092076<span style="color:#f92672">&lt;/id&gt;</span>
-        <span style="color:#f92672">&lt;published&gt;</span>2022-08-09T12:41:41+09:00<span style="color:#f92672">&lt;/published&gt;</span>
-        <span style="color:#f92672">&lt;updated&gt;</span>2022-08-09T12:41:41+09:00<span style="color:#f92672">&lt;/updated&gt;</span>
-        <span style="color:#f92672">&lt;summary</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span>高い車が安い車を煽る…<span style="color:#f92672">&lt;/summary&gt;</span>
-        <span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span>&amp;lt;p&amp;gt;高い車が安い車を煽る&amp;lt;/p&amp;gt;<span style="color:#f92672">&lt;/content&gt;</span>
-   <span style="color:#f92672">&lt;/entry&gt;</span>
-<span style="color:#f92672">&lt;/feed&gt;</span>
-</code></pre></div><p>注意点としては</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#f92672">&lt;feed</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.w3.org/2005/Atom&#34;</span> <span style="color:#a6e22e">xml:lang=</span><span style="color:#e6db74">&#34;ja&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;title&gt;</span>・ｘ・ぼくののうみそ<span style="color:#f92672">&lt;/title&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;https://bokunonoumiso.hatenablog.com/&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;updated&gt;</span>2022-08-09T12:41:41+09:00<span style="color:#f92672">&lt;/updated&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;author&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;name&gt;</span>bokunonoumiso<span style="color:#f92672">&lt;/name&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/author&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;generator</span> <span style="color:#a6e22e">uri=</span><span style="color:#e6db74">&#34;https://blog.hatena.ne.jp/&#34;</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;149d375eb29bfc5c8439e961a2b85a&#34;</span><span style="color:#f92672">&gt;</span>Hatena::Blog<span style="color:#f92672">&lt;/generator&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;id&gt;</span>hatenablog://blog/6653812171403772804<span style="color:#f92672">&lt;/id&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;entry&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;title&gt;</span>高い車に乗って安い車を煽る<span style="color:#f92672">&lt;/title&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;https://bokunonoumiso.hatenablog.com/entry/2022/08/09/124141&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;id&gt;</span>hatenablog://entry/4207112889907092076<span style="color:#f92672">&lt;/id&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;published&gt;</span>2022-08-09T12:41:41+09:00<span style="color:#f92672">&lt;/published&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;updated&gt;</span>2022-08-09T12:41:41+09:00<span style="color:#f92672">&lt;/updated&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;summary</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span>高い車が安い車を煽る…<span style="color:#f92672">&lt;/summary&gt;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span>&amp;lt;p&amp;gt;高い車が安い車を煽る&amp;lt;/p&amp;gt;<span style="color:#f92672">&lt;/content&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">&lt;/entry&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/feed&gt;</span>
+</span></span></code></pre></div><p>注意点としては</p>
 <ul>
-<li>RSS 1.0/2.0ではなく<a href="http://www.w3.org/2005/Atom">ATOM規格</a>っぽい</li>
-<li>contentの中身はhtmlなので、escape されてる</li>
+<li>RSS 1.0/2.0ではなく<a href="http://www.w3.org/2005/Atom">ATOM規格</a>っぽい。summaryに概要、contentに本文を入れることができる。</li>
+<li>summaryでは多くのリーダーで対応するために、htmlタグなしの plainify されたテキストが良さそう。</li>
+<li>contentの中身はhtmlなので、escape するか CDATA 属性に突っ込む。なおhugo組み込み関数のescapeHTMLでは<code>&amp;</code>も変換されてしまいうまくいかなかった。</li>
+<li>もし RSS 1.0/2.0 を使いたい場合、本文を表示するには <code>&lt;content:encoded&gt;</code> を使うと良いらしい <a href="https://www.w3.org/wiki/RssContent">https://www.w3.org/wiki/RssContent</a></li>
 </ul>
 <h2 id="hugoのfeed">Hugoのfeed</h2>
 <p><a href="https://github.com/gohugoio/hugo/blob/988e1417a057b937a766385f79f46a52e933baee/tpl/tplimpl/embedded/templates/_default/rss.xml">Hugo標準付属のrss.xml</a>はRSS 2.0なのかAtomなのかよくわからない感じですね。
 hatenaブログのフィードっぽくしたテンプレートはこんな感じです。</p>
 
 
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">{{- $pctx := . -}}
-{{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
-{{- $pages := slice -}}
-{{- if or $.IsHome $.IsSection -}}
-{{- $pages = $pctx.RegularPages -}}
-{{- else -}}
-{{- $pages = $pctx.Pages -}}
-{{- end -}}
-{{- $limit := .Site.Config.Services.RSS.Limit -}}
-{{- if ge $limit 1 -}}
-{{- $pages = $pages | first $limit -}}
-{{- end -}}
-<span style="color:#f92672">&lt;feed</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.w3.org/2005/Atom&#34;</span> <span style="color:#a6e22e">xml:lang=</span><span style="color:#e6db74">&#34;ja&#34;</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;title&gt;</span>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{.}} on {{ end }}{{ .Site.Title }}{{ end }}<span style="color:#f92672">&lt;/title&gt;</span>
-
-  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span><span style="color:#f92672">/&gt;</span>
-  <span style="color:#f92672">&lt;updated&gt;</span>{{ time.Format &#34;2006-01-02T15:04:05-0700&#34; .Site.LastChange | safeHTML }}<span style="color:#f92672">&lt;/updated&gt;</span>
-  <span style="color:#f92672">&lt;author&gt;</span>
-    <span style="color:#f92672">&lt;name&gt;</span>{{ $.Site.Params.author }}<span style="color:#f92672">&lt;/name&gt;</span>
-  <span style="color:#f92672">&lt;/author&gt;</span>
-  <span style="color:#f92672">&lt;generator</span> <span style="color:#a6e22e">uri=</span><span style="color:#e6db74">&#34;https://gohugo.io&#34;</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;{{ hugo.Version }}&#34;</span><span style="color:#f92672">&gt;</span>Hugo<span style="color:#f92672">&lt;/generator&gt;</span>
-  <span style="color:#f92672">&lt;id&gt;</span>{{ .Permalink }}<span style="color:#f92672">&lt;/id&gt;</span>
-
-  {{ range $pages }}
-  <span style="color:#f92672">&lt;entry&gt;</span>
-    <span style="color:#f92672">&lt;title&gt;</span>{{ .Title }}<span style="color:#f92672">&lt;/title&gt;</span>
-    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span><span style="color:#f92672">/&gt;</span>
-    <span style="color:#f92672">&lt;id&gt;</span>{{ .Permalink }}<span style="color:#f92672">&lt;/id&gt;</span>
-    <span style="color:#f92672">&lt;published&gt;</span>{{ .PublishDate.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style="color:#f92672">&lt;/published&gt;</span>
-    <span style="color:#f92672">&lt;updated&gt;</span>{{ .Lastmod.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style="color:#f92672">&lt;/updated&gt;</span>
-    {{ with .Site.Author.email }}<span style="color:#f92672">&lt;author&gt;</span>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}<span style="color:#f92672">&lt;/author&gt;</span>{{end}}
-    <span style="color:#f92672">&lt;summary</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span>{{ .Summary | plainify }}...<span style="color:#f92672">&lt;/summary&gt;</span>
-    {{ printf `<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span><span style="color:#75715e">&lt;![CDATA[%s]]&gt;</span><span style="color:#f92672">&lt;/content&gt;</span>` .Content | safeHTML }}
-  <span style="color:#f92672">&lt;/entry&gt;</span>
-  {{ end }}
-<span style="color:#f92672">&lt;/feed&gt;</span>
-
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span>{{- $pctx := . -}}
+</span></span><span style="display:flex;"><span>{{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
+</span></span><span style="display:flex;"><span>{{- $pages := slice -}}
+</span></span><span style="display:flex;"><span>{{- if or $.IsHome $.IsSection -}}
+</span></span><span style="display:flex;"><span>{{- $pages = $pctx.RegularPages -}}
+</span></span><span style="display:flex;"><span>{{- else -}}
+</span></span><span style="display:flex;"><span>{{- $pages = $pctx.Pages -}}
+</span></span><span style="display:flex;"><span>{{- end -}}
+</span></span><span style="display:flex;"><span>{{- $limit := .Site.Config.Services.RSS.Limit -}}
+</span></span><span style="display:flex;"><span>{{- if ge $limit 1 -}}
+</span></span><span style="display:flex;"><span>{{- $pages = $pages | first $limit -}}
+</span></span><span style="display:flex;"><span>{{- end -}}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;feed</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.w3.org/2005/Atom&#34;</span> <span style="color:#a6e22e">xml:lang=</span><span style="color:#e6db74">&#34;ja&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;title&gt;</span>{{ if eq  .Title  .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{.}} on {{ end }}{{ .Site.Title }}{{ end }}<span style="color:#f92672">&lt;/title&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;updated&gt;</span>{{ time.Format &#34;2006-01-02T15:04:05-0700&#34; .Site.LastChange | safeHTML }}<span style="color:#f92672">&lt;/updated&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;author&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;name&gt;</span>{{ $.Site.Params.author }}<span style="color:#f92672">&lt;/name&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/author&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;generator</span> <span style="color:#a6e22e">uri=</span><span style="color:#e6db74">&#34;https://gohugo.io&#34;</span> <span style="color:#a6e22e">version=</span><span style="color:#e6db74">&#34;{{ hugo.Version }}&#34;</span><span style="color:#f92672">&gt;</span>Hugo<span style="color:#f92672">&lt;/generator&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;id&gt;</span>{{ .Permalink }}<span style="color:#f92672">&lt;/id&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  {{ range $pages }}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;entry&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;title&gt;</span>{{ .Title }}<span style="color:#f92672">&lt;/title&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;link</span> <span style="color:#a6e22e">href=</span><span style="color:#e6db74">&#34;{{ .Permalink }}&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;id&gt;</span>{{ .Permalink }}<span style="color:#f92672">&lt;/id&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;published&gt;</span>{{ .PublishDate.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style="color:#f92672">&lt;/published&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;updated&gt;</span>{{ .Lastmod.Format &#34;2006-01-02T15:04:05-0700&#34; | safeHTML }}<span style="color:#f92672">&lt;/updated&gt;</span>
+</span></span><span style="display:flex;"><span>    {{ with .Site.Author.email }}<span style="color:#f92672">&lt;author&gt;</span>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}<span style="color:#f92672">&lt;/author&gt;</span>{{end}}
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;summary</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span>{{ .Summary | plainify }}...<span style="color:#f92672">&lt;/summary&gt;</span>
+</span></span><span style="display:flex;"><span>    {{ printf `<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;html&#34;</span><span style="color:#f92672">&gt;</span><span style="color:#75715e">&lt;![CDATA[%s]]&gt;</span><span style="color:#f92672">&lt;/content&gt;</span>` .Content | safeHTML }}
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/entry&gt;</span>
+</span></span><span style="display:flex;"><span>  {{ end }}
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/feed&gt;</span>
+</span></span></code></pre></div>
 
 <p>詳細は以下のcommitを見てください。</p>
 <p><a href="https://github.com/klknn/klknn.github.io/commit/afb831f515d54b451e70fbc5e5ae95e669d79c75">https://github.com/klknn/klknn.github.io/commit/afb831f515d54b451e70fbc5e5ae95e669d79c75</a></p>
@@ -312,16 +330,16 @@ hatenaブログのフィードっぽくしたテンプレートはこんな感�
 <p>そのうちプログラミング環境も揃えていければなと思います。ソフトウェアのインストールにHomebrew久々に使ったらなんか自分でコンパイルしなくなってる？昔BSD系のOS使ってた頃は、全部コンパイルするから楽しかったです。ただ、これってソフトウェア署名の問題とかあるんですかね、自分でコンパイルしたバイナリすら自由に使えない仕様にキれて速攻SIPは切りました。どうせ音楽用ソフトとブラウザくらいしか野良バイナリは入れません。ちなみに技術的なこと検索するときは Qiita と brew をNGワードに設定しています、カス率が高いので。</p>
 <h2 id="d言語設定-on-m1-mac">D言語設定 on M1 Mac</h2>
 <p>プラグイン開発の設定をする前に、プログラミング環境の設定をやります。とりあえずrosettaでDMDコンパイラも問題なく動きましたが、M1 nativeじゃないと嫌&hellip;という気持ちがあり、LDC2をメインで使ってます。そのうちクロスコンパイルとかにも挑戦したい。とくにLinuxと違うことはないですが、唯一Emacsの設定でcompany-dmdにLDC2を使ってますよと教える必要があります。あとDCDとかもそこそこ重いので一応M1 nativeじゃないと嫌&hellip;という気持ちでHEADをコンパイルして使ってます。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elisp" data-lang="elisp">(use-package d-mode
-  :ensure <span style="color:#66d9ef">t</span>
-  :init
-  (use-package company-dcd
-    :ensure <span style="color:#66d9ef">t</span>
-    :config
-    (setq company-dcd-compiler <span style="color:#e6db74">&#34;~/Downloads/ldc2-1.25.1-osx-arm64/bin/ldc2&#34;</span>)
-    (setq company-dcd-client-executable <span style="color:#e6db74">&#34;~/repos/DCD/bin/dcd-client&#34;</span>)
-    (setq company-dcd-server-executable <span style="color:#e6db74">&#34;~/repos/DCD/bin/dcd-server&#34;</span>))
-</code></pre></div><p>最近ようやくuse-packageを使って、<code>.emacs</code>の式年造替を終えました。なんとなく長年使ってた <code>.emacs.d/init.el</code> から <code>.emacs</code> に変えました。開きやすいから。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-elisp" data-lang="elisp"><span style="display:flex;"><span>(use-package d-mode
+</span></span><span style="display:flex;"><span>  :ensure <span style="color:#66d9ef">t</span>
+</span></span><span style="display:flex;"><span>  :init
+</span></span><span style="display:flex;"><span>  (use-package company-dcd
+</span></span><span style="display:flex;"><span>    :ensure <span style="color:#66d9ef">t</span>
+</span></span><span style="display:flex;"><span>    :config
+</span></span><span style="display:flex;"><span>    (setq company-dcd-compiler <span style="color:#e6db74">&#34;~/Downloads/ldc2-1.25.1-osx-arm64/bin/ldc2&#34;</span>)
+</span></span><span style="display:flex;"><span>    (setq company-dcd-client-executable <span style="color:#e6db74">&#34;~/repos/DCD/bin/dcd-client&#34;</span>)
+</span></span><span style="display:flex;"><span>    (setq company-dcd-server-executable <span style="color:#e6db74">&#34;~/repos/DCD/bin/dcd-server&#34;</span>))
+</span></span></code></pre></div><p>最近ようやくuse-packageを使って、<code>.emacs</code>の式年造替を終えました。なんとなく長年使ってた <code>.emacs.d/init.el</code> から <code>.emacs</code> に変えました。開きやすいから。</p>
 <p>そういえば、前回の記事でflycheck-dmd-dubにWindows MSYS2対応パッチ投げた件、マージしてもらえたのでcompany-dcdにも投げなきゃ&hellip;。</p>
 <h2 id="hugo-アップデート">Hugo アップデート</h2>
 <p>雑に <code>brew install hugo</code> したら最新版の v0.83.1 が入っていたので Github Actions の方もアプデしました (hugo はシングルバイナリ配布が売りなのでわざわざ brew 使う必要はないが)。目立った違いはなさそうですが、個人的には記事の日付表示が以前から <code>2021-06-02 03:25:33 +0900 +0900</code> となぜかタイムゾーンが二度表示されているバグが修正されて、 <code>2021-06-02 03:25:33 +0900 JST</code> という表記に変わったところが超嬉しいです。JS側でhackするとかHugoの中に手を入れたなかったので、すごく嬉しいです。</p>
@@ -329,17 +347,17 @@ hatenaブログのフィードっぽくしたテンプレートはこんな感�
 <p><a href="https://discourse.gohugo.io/t/convert-all-times-to-utc/3206">https://discourse.gohugo.io/t/convert-all-times-to-utc/3206</a></p>
 <h2 id="ダークモード対応">ダークモード対応</h2>
 <p><a href="/posts/hugo-setup">このサイトはCSSを書かない主義</a> でやっているのですが、Mac買ってダークモードという概念があることを認識したので、こんな感じで追加してみました。相変わらず 全部 <a href="https://github.com/klknn/klknn.github.io/blob/develop/layouts/_default/baseof.html">layouts/_default/baseof.html</a> に直書きです。ブラウザとOSで異なるモード選択していたらどうなるのかとか気になるけど、まぁいいか。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">@<span style="color:#66d9ef">media</span> <span style="color:#f92672">(</span><span style="color:#f92672">prefers-color-scheme</span><span style="color:#f92672">:</span> <span style="color:#f92672">dark</span><span style="color:#f92672">)</span> {
-    <span style="color:#f92672">body</span> {
-        <span style="color:#66d9ef">background-color</span>: <span style="color:#ae81ff">#222</span>;
-        <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#ddd</span>;
-    }
-    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">link</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#88f</span>; }
-    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">visited</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#88c</span>; }
-    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">hover</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#f88</span>; }
-    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">active</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#f80</span>; }
-}
-</code></pre></div><p>あと解像度高いディスプレイで見たら横長すぎて読みにくいので max-width とかもいれました。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-css" data-lang="css"><span style="display:flex;"><span>@<span style="color:#66d9ef">media</span> <span style="color:#f92672">(</span><span style="color:#f92672">prefers-color-scheme</span><span style="color:#f92672">:</span> <span style="color:#f92672">dark</span><span style="color:#f92672">)</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">body</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">background-color</span>: <span style="color:#ae81ff">#222</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#ddd</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">link</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#88f</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">visited</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#88c</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">hover</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#f88</span>; }
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">a</span>:<span style="color:#a6e22e">active</span> { <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#f80</span>; }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>あと解像度高いディスプレイで見たら横長すぎて読みにくいので max-width とかもいれました。</p>
 ]]></content></entry><entry><title>WindowsでのDplug開発</title><link href="https://klknn.github.io/posts/d-windows/"/><id>https://klknn.github.io/posts/d-windows/</id><published>2021-02-28T14:24:12+0900</published><updated>2021-02-28T14:24:12+0900</updated><summary type="html">Synth2 開発のために，普段の音楽制作で使ってるWindowsで開発環境を構築しました．その備忘録です． コンパイラ 以下のツールが必要 MSVC x64/x86 build tools (v14.28) + Windows 10 SDK (10.01924.10) : https://visualstudio.microsoft.com 64bitバイナリのリンクに必要．数GBあるのなんなんですかね．(XCodeよりはマシだが)．Github Actions読み解けば減らせるかもしれない． ldc2 最新版 (ldc2-1.25.0-windows-x64.7z): https://github.com/ldc-developers/ldc/releases D言語のコンパイルに必要． dplug-build: https://github.com/AuburnSounds/Dplug/wiki/Getting-Started#step-3-build-the-dplug-build-tool 動的ライブラリをVST3等のプラグインに変換するときに必要． 色々書くのが面倒で動画も作ったので，暇な人は見てください． https://www.youtube.com/watch?v=vZEgpgHGI-A&amp;amp;t=17s 動画ではPowerShellを使ってますが，私はzsh (+tmux+emacs) が好きなので，基本 MSYS2 で開発してます． エディタ 拘りがなければ VSCode の D 言語拡張 を入れるの...</summary><content type="html"><![CDATA[<p><a href="https://github.com/klknn/synth2">Synth2</a> 開発のために，普段の音楽制作で使ってるWindowsで開発環境を構築しました．その備忘録です．</p>
 <h2 id="コンパイラ">コンパイラ</h2>
 <p>以下のツールが必要</p>
@@ -362,12 +380,12 @@ D言語のコンパイルに必要．</li>
 <li><a href="https://github.com/klknn/company-dcd/tree/fix-cygwin">https://github.com/klknn/company-dcd/tree/fix-cygwin</a></li>
 </ul>
 <p>上記のパッケージにelispのパスを通して，こんな感じで設定してます．</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-elisp" data-lang="elisp">(add-to-list <span style="color:#e6db74">&#39;load-path</span> <span style="color:#e6db74">&#34;flycheck-dmd-dubのパス&#34;</span>)
-(add-to-list <span style="color:#e6db74">&#39;load-path</span> <span style="color:#e6db74">&#34;company-dcdのパス&#34;</span>)
-(add-hook <span style="color:#e6db74">&#39;d-mode-hook</span> <span style="color:#e6db74">&#39;company-dcd-mode</span>)
-(setq company-dcd-client-execulable <span style="color:#e6db74">&#34;dcd-client.exeのパス&#34;</span>)
-(setq company-dcd-server-execulable <span style="color:#e6db74">&#34;dcd-server.exeのパス&#34;</span>)
-</code></pre></div><p>こんな風にcompanyによる補完や <code>C-c .</code> による定義ジャンプが動くはずです．</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-elisp" data-lang="elisp"><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;load-path</span> <span style="color:#e6db74">&#34;flycheck-dmd-dubのパス&#34;</span>)
+</span></span><span style="display:flex;"><span>(add-to-list <span style="color:#e6db74">&#39;load-path</span> <span style="color:#e6db74">&#34;company-dcdのパス&#34;</span>)
+</span></span><span style="display:flex;"><span>(add-hook <span style="color:#e6db74">&#39;d-mode-hook</span> <span style="color:#e6db74">&#39;company-dcd-mode</span>)
+</span></span><span style="display:flex;"><span>(setq company-dcd-client-execulable <span style="color:#e6db74">&#34;dcd-client.exeのパス&#34;</span>)
+</span></span><span style="display:flex;"><span>(setq company-dcd-server-execulable <span style="color:#e6db74">&#34;dcd-server.exeのパス&#34;</span>)
+</span></span></code></pre></div><p>こんな風にcompanyによる補完や <code>C-c .</code> による定義ジャンプが動くはずです．</p>
 <p><img src="/emacs-company-dcd.png" alt="emacs-company-dcd.png"></p>
 <p>とりあえず <a href="https://github.com/atilaneves/flycheck-dmd-dub/pull/15">flycheck-dmd-dub に PR</a> を出しました，もし無事マージされたら company-dcd にもPRしたいと思います．</p>
 <p>とても久しぶりにelisp書きましたが，シェルスクリプトばりに雑に書けてインタラクティブに動作できるので気持ちいいなと思いました．この適当にhackして治せる点が，他のエディタにない醍醐味だと思います．もしWindowsでemacsがうまく動かなかったらブチ切れてMacを買っていたかもしれません(そっちで動く保証はないですが)．現在Macは持っていないのでサポートする予定ないです．</p>
@@ -440,7 +458,7 @@ s &amp;= \frac{2}{T} \frac{z-1}{z+1}, \newline
 \begin{align}
 H(s) &amp;= \frac{1}{s + 1}.
 \end{align}
-さらに $s = s' / \omega_0$ を代入することで、今度は対数スケールで周波数軸を左右に平行移動できる。これは単なる変数変換なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
+さらに $s = s&rsquo; / \omega_0$ を代入することで、今度は対数スケールで周波数軸を左右に平行移動できる。これは単なる変数変換なので、同じ代入式で任意のフィルタ伝達関数にカットオフ周波数 $\omega_0$ を導入できる。
 \begin{align}
 H(s) = \frac{1}{\frac{s}{\omega_0} + 1}
 \end{align}</p>
@@ -474,115 +492,112 @@ H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q}
 <p>コード <a href="/filter_coeff.py">filter_coeff.py</a>
 
 
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-py" data-lang="py"><span style="color:#75715e"># requires version &#39;1.7.1</span>
-<span style="color:#f92672">from</span> sympy <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-
-s <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;s&#39;</span>)
-z <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;z&#39;</span>)
-Q <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;Q&#39;</span>)    <span style="color:#75715e"># resonance</span>
-T <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;T&#39;</span>)    <span style="color:#75715e"># sampling interval</span>
-w0 <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;w0&#39;</span>)  <span style="color:#75715e"># cutoff freq</span>
-
-<span style="color:#75715e"># z2s = 2 / T * (z - 1) / (z + 1)</span>
-s2z <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> T <span style="color:#f92672">*</span> (z <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> (z <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
-
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_coeff</span>(hs):
-    hz <span style="color:#f92672">=</span> simplify(hs<span style="color:#f92672">.</span>subs(s, s2z))  <span style="color:#75715e"># Z transform</span>
-    npole <span style="color:#f92672">=</span> degree(denom(hs), s)
-    print(<span style="color:#e6db74">&#34;=== Transfer function ===&#34;</span>)
-    print(<span style="color:#e6db74">&#34;H(s) =&#34;</span>, hs)  <span style="color:#75715e"># transfer function in Laplace domain</span>
-    print(<span style="color:#e6db74">&#34;H(z) =&#34;</span>, hz)  <span style="color:#75715e"># transfer function in Z domain</span>
-    print(<span style="color:#e6db74">&#34;#pole =&#34;</span>, npole)
-    print(<span style="color:#e6db74">&#34;=== Filter coeffients ===&#34;</span>)
-    <span style="color:#75715e"># FIR coeff</span>
-    dhz <span style="color:#f92672">=</span> collect(expand(denom(hz) <span style="color:#f92672">*</span> z <span style="color:#f92672">**</span> <span style="color:#f92672">-</span>npole), z)
-    nhz <span style="color:#f92672">=</span> collect(expand(numer(hz) <span style="color:#f92672">*</span> z <span style="color:#f92672">**</span> <span style="color:#f92672">-</span>npole), z)
-    a0 <span style="color:#f92672">=</span> dhz<span style="color:#f92672">.</span>coeff(z, <span style="color:#ae81ff">0</span>)  <span style="color:#75715e"># to normalize a0 = 1</span>
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(npole <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>):
-        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;b</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> =&#34;</span>, nhz<span style="color:#f92672">.</span>coeff(z, <span style="color:#f92672">-</span>i) <span style="color:#f92672">/</span> a0)
-    <span style="color:#75715e"># IIR coeff</span>
-    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, npole <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>):
-        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;a</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> =&#34;</span>, dhz<span style="color:#f92672">.</span>coeff(z, <span style="color:#f92672">-</span>i) <span style="color:#f92672">/</span> a0)
-
-
-print(<span style="color:#e6db74">&#34;Filter: 1-pole LPF&#34;</span>)
-print_coeff(hs <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> (s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
-print()
-print(<span style="color:#e6db74">&#34;Filter: 1-pole HPF&#34;</span>)
-print_coeff(hs <span style="color:#f92672">=</span> s <span style="color:#f92672">/</span> (s <span style="color:#f92672">+</span> w0))
-print()
-print(<span style="color:#e6db74">&#34;Filter: 2-pole LPF&#34;</span>)
-print_coeff(hs <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
-print()
-print(<span style="color:#e6db74">&#34;Filter: 2-pole HPF&#34;</span>)
-print_coeff(hs <span style="color:#f92672">=</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">/</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
-print()
-print(<span style="color:#e6db74">&#34;Filter: 2-pole BPF&#34;</span>)
-print_coeff(hs <span style="color:#f92672">=</span> (s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q) <span style="color:#f92672">/</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
-
-
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e"># requires version &#39;1.7.1</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sympy <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>s <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;s&#39;</span>)
+</span></span><span style="display:flex;"><span>z <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;z&#39;</span>)
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;Q&#39;</span>)    <span style="color:#75715e"># resonance</span>
+</span></span><span style="display:flex;"><span>T <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;T&#39;</span>)    <span style="color:#75715e"># sampling interval</span>
+</span></span><span style="display:flex;"><span>w0 <span style="color:#f92672">=</span> Symbol(<span style="color:#e6db74">&#39;w0&#39;</span>)  <span style="color:#75715e"># cutoff freq</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># z2s = 2 / T * (z - 1) / (z + 1)</span>
+</span></span><span style="display:flex;"><span>s2z <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> T <span style="color:#f92672">*</span> (z <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">/</span> (z <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">print_coeff</span>(hs):
+</span></span><span style="display:flex;"><span>    hz <span style="color:#f92672">=</span> simplify(hs<span style="color:#f92672">.</span>subs(s, s2z))  <span style="color:#75715e"># Z transform</span>
+</span></span><span style="display:flex;"><span>    npole <span style="color:#f92672">=</span> degree(denom(hs), s)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;=== Transfer function ===&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;H(s) =&#34;</span>, hs)  <span style="color:#75715e"># transfer function in Laplace domain</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;H(z) =&#34;</span>, hz)  <span style="color:#75715e"># transfer function in Z domain</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;#pole =&#34;</span>, npole)
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;=== Filter coeffients ===&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># FIR coeff</span>
+</span></span><span style="display:flex;"><span>    dhz <span style="color:#f92672">=</span> collect(expand(denom(hz) <span style="color:#f92672">*</span> z <span style="color:#f92672">**</span> <span style="color:#f92672">-</span>npole), z)
+</span></span><span style="display:flex;"><span>    nhz <span style="color:#f92672">=</span> collect(expand(numer(hz) <span style="color:#f92672">*</span> z <span style="color:#f92672">**</span> <span style="color:#f92672">-</span>npole), z)
+</span></span><span style="display:flex;"><span>    a0 <span style="color:#f92672">=</span> dhz<span style="color:#f92672">.</span>coeff(z, <span style="color:#ae81ff">0</span>)  <span style="color:#75715e"># to normalize a0 = 1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(npole <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;b</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> =&#34;</span>, nhz<span style="color:#f92672">.</span>coeff(z, <span style="color:#f92672">-</span>i) <span style="color:#f92672">/</span> a0)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># IIR coeff</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, npole <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;a</span><span style="color:#e6db74">{</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74"> =&#34;</span>, dhz<span style="color:#f92672">.</span>coeff(z, <span style="color:#f92672">-</span>i) <span style="color:#f92672">/</span> a0)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Filter: 1-pole LPF&#34;</span>)
+</span></span><span style="display:flex;"><span>print_coeff(hs <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> (s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Filter: 1-pole HPF&#34;</span>)
+</span></span><span style="display:flex;"><span>print_coeff(hs <span style="color:#f92672">=</span> s <span style="color:#f92672">/</span> (s <span style="color:#f92672">+</span> w0))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Filter: 2-pole LPF&#34;</span>)
+</span></span><span style="display:flex;"><span>print_coeff(hs <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">/</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Filter: 2-pole HPF&#34;</span>)
+</span></span><span style="display:flex;"><span>print_coeff(hs <span style="color:#f92672">=</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">/</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+</span></span><span style="display:flex;"><span>print()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Filter: 2-pole BPF&#34;</span>)
+</span></span><span style="display:flex;"><span>print_coeff(hs <span style="color:#f92672">=</span> (s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q) <span style="color:#f92672">/</span> (s<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">/</span> w0<span style="color:#f92672">**</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> s <span style="color:#f92672">/</span> w0 <span style="color:#f92672">/</span> Q <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>))
+</span></span></code></pre></div>
 </p>
 <p>結果 <a href="/filter_coeff.txt">filter_coeff.txt</a>
 
 
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">Filter: 1-pole LPF
-=== Transfer function ===
-H(s) = 1/(s/w0 + 1)
-H(z) = T*w0*(z + 1)/(T*w0*(z + 1) + 2*z - 2)
-#pole = 1
-=== Filter coeffients ===
-b0 = T*w0/(T*w0 + 2)
-b1 = T*w0/(T*w0 + 2)
-a1 = (T*w0 - 2)/(T*w0 + 2)
-
-Filter: 1-pole HPF
-=== Transfer function ===
-H(s) = s/(s + w0)
-H(z) = 2*(z - 1)/(T*w0*(z + 1) + 2*z - 2)
-#pole = 1
-=== Filter coeffients ===
-b0 = 2/(T*w0 + 2)
-b1 = -2/(T*w0 + 2)
-a1 = (T*w0 - 2)/(T*w0 + 2)
-
-Filter: 2-pole LPF
-=== Transfer function ===
-H(s) = 1/(s**2/w0**2 + 1 + s/(Q*w0))
-H(z) = Q*T**2*w0**2*(z + 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
-#pole = 2
-=== Filter coeffients ===
-b0 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b1 = 2*Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b2 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-
-Filter: 2-pole HPF
-=== Transfer function ===
-H(s) = s**2/(w0**2*(s**2/w0**2 + 1 + s/(Q*w0)))
-H(z) = 4*Q*(z - 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
-#pole = 2
-=== Filter coeffients ===
-b0 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b1 = -8*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b2 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-
-Filter: 2-pole BPF
-=== Transfer function ===
-H(s) = s/(Q*w0*(s**2/w0**2 + 1 + s/(Q*w0)))
-H(z) = 2*T*w0*(z - 1)*(z + 1)/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
-#pole = 2
-=== Filter coeffients ===
-b0 = 2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-b1 = 0
-b2 = -2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
-
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>Filter: 1-pole LPF
+</span></span><span style="display:flex;"><span>=== Transfer function ===
+</span></span><span style="display:flex;"><span>H(s) = 1/(s/w0 + 1)
+</span></span><span style="display:flex;"><span>H(z) = T*w0*(z + 1)/(T*w0*(z + 1) + 2*z - 2)
+</span></span><span style="display:flex;"><span>#pole = 1
+</span></span><span style="display:flex;"><span>=== Filter coeffients ===
+</span></span><span style="display:flex;"><span>b0 = T*w0/(T*w0 + 2)
+</span></span><span style="display:flex;"><span>b1 = T*w0/(T*w0 + 2)
+</span></span><span style="display:flex;"><span>a1 = (T*w0 - 2)/(T*w0 + 2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Filter: 1-pole HPF
+</span></span><span style="display:flex;"><span>=== Transfer function ===
+</span></span><span style="display:flex;"><span>H(s) = s/(s + w0)
+</span></span><span style="display:flex;"><span>H(z) = 2*(z - 1)/(T*w0*(z + 1) + 2*z - 2)
+</span></span><span style="display:flex;"><span>#pole = 1
+</span></span><span style="display:flex;"><span>=== Filter coeffients ===
+</span></span><span style="display:flex;"><span>b0 = 2/(T*w0 + 2)
+</span></span><span style="display:flex;"><span>b1 = -2/(T*w0 + 2)
+</span></span><span style="display:flex;"><span>a1 = (T*w0 - 2)/(T*w0 + 2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Filter: 2-pole LPF
+</span></span><span style="display:flex;"><span>=== Transfer function ===
+</span></span><span style="display:flex;"><span>H(s) = 1/(s**2/w0**2 + 1 + s/(Q*w0))
+</span></span><span style="display:flex;"><span>H(z) = Q*T**2*w0**2*(z + 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
+</span></span><span style="display:flex;"><span>#pole = 2
+</span></span><span style="display:flex;"><span>=== Filter coeffients ===
+</span></span><span style="display:flex;"><span>b0 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>b1 = 2*Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>b2 = Q*T**2*w0**2/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Filter: 2-pole HPF
+</span></span><span style="display:flex;"><span>=== Transfer function ===
+</span></span><span style="display:flex;"><span>H(s) = s**2/(w0**2*(s**2/w0**2 + 1 + s/(Q*w0)))
+</span></span><span style="display:flex;"><span>H(z) = 4*Q*(z - 1)**2/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
+</span></span><span style="display:flex;"><span>#pole = 2
+</span></span><span style="display:flex;"><span>=== Filter coeffients ===
+</span></span><span style="display:flex;"><span>b0 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>b1 = -8*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>b2 = 4*Q/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Filter: 2-pole BPF
+</span></span><span style="display:flex;"><span>=== Transfer function ===
+</span></span><span style="display:flex;"><span>H(s) = s/(Q*w0*(s**2/w0**2 + 1 + s/(Q*w0)))
+</span></span><span style="display:flex;"><span>H(z) = 2*T*w0*(z - 1)*(z + 1)/(Q*T**2*w0**2*(z + 1)**2 + 4*Q*(z - 1)**2 + 2*T*w0*(z - 1)*(z + 1))
+</span></span><span style="display:flex;"><span>#pole = 2
+</span></span><span style="display:flex;"><span>=== Filter coeffients ===
+</span></span><span style="display:flex;"><span>b0 = 2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>b1 = 0
+</span></span><span style="display:flex;"><span>b2 = -2*T*w0/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>a1 = (2*Q*T**2*w0**2 - 8*Q)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span><span style="display:flex;"><span>a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
+</span></span></code></pre></div>
 </p>
 <p>ある程度、展開できればいいやと思ってたが、完全に自動化できると思ってなかった&hellip;。ちなみに古いバージョンのsympyでやるとうまくいかないので注意。</p>
 <h2 id="メモ疑問">メモ・疑問</h2>
@@ -606,9 +621,9 @@ a2 = (Q*T**2*w0**2 + 4*Q - 2*T*w0)/(Q*T**2*w0**2 + 4*Q + 2*T*w0)
 <p>
 <a href="https://ziglang.org/download/">公式サイト</a> からビルド済みバイナリをDLしてパスを通すだけ。CPUはx86と各種arm系、OSはlinuxにwindows、freebsdもあるすごい。</p>
 <div class="src src-bash">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">wget https://ziglang.org/download/0.6.0/zig-linux-x86_64-0.6.0.tar.xz
-tar xvf zig-linux-x86_64-0.6.0.tar.xz
-export PATH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span>/zig-linux-x86_64-0.6.0:$PATH</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>wget https://ziglang.org/download/0.6.0/zig-linux-x86_64-0.6.0.tar.xz
+</span></span><span style="display:flex;"><span>tar xvf zig-linux-x86_64-0.6.0.tar.xz
+</span></span><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span>/zig-linux-x86_64-0.6.0:$PATH</span></span></code></pre></div>
 </div>
 <p>
 同じページに <a href="https://ziglang.org/documentation/0.6.0">Language Reference</a> と <a href="https://ziglang.org/documentation/0.6.0/std">Standard Library Documentation</a> がある。これらと github のコードがほぼ全ての情報源である。とりあえず最初の Hello world くらいはやっとくと雰囲気つかめる。</p>
@@ -629,36 +644,36 @@ export PATH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</s
 </h3>
 <div id="outline-text-headline-3" class="outline-text-3">
 <div class="src src-bash">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir foo
-cd foo
-zig init-exe</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir foo
+</span></span><span style="display:flex;"><span>cd foo
+</span></span><span style="display:flex;"><span>zig init-exe</span></span></code></pre></div>
 </div>
 <p>ライブラリを作るときは <code>init-lib</code></p>
 <p>
 これでこんなファイルが生成される</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">const</span> Builder <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span>import(<span style="color:#e6db74">&#34;std&#34;</span>).build.Builder;
-
-pub fn <span style="color:#a6e22e">build</span>(b: <span style="color:#f92672">*</span>Builder) <span style="color:#66d9ef">void</span> {
-    <span style="color:#75715e">// Standard target options allows the person running `zig build` to choose
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// what target to build for. Here we do not override the defaults, which
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// means any target is allowed, and the default is native. Other options
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// for restricting supported target set are available.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> target <span style="color:#f92672">=</span> b.standardTargetOptions(.{});
-
-    <span style="color:#75715e">// Standard release options allow the person running `zig build` to select
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> mode <span style="color:#f92672">=</span> b.standardReleaseOptions();
-
-    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.addExecutable(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
-    exe.setTarget(target);
-    exe.setBuildMode(mode);
-    exe.install();
-    <span style="color:#66d9ef">const</span> run_cmd <span style="color:#f92672">=</span> exe.run();
-    run_cmd.step.dependOn(b.getInstallStep());
-    <span style="color:#66d9ef">const</span> run_step <span style="color:#f92672">=</span> b.step(<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#e6db74">&#34;Run the app&#34;</span>);
-    run_step.dependOn(<span style="color:#f92672">&amp;</span>run_cmd.step);
-}</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> Builder <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span>import(<span style="color:#e6db74">&#34;std&#34;</span>).build.Builder;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pub fn <span style="color:#a6e22e">build</span>(b: <span style="color:#f92672">*</span>Builder) <span style="color:#66d9ef">void</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Standard target options allows the person running `zig build` to choose
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// what target to build for. Here we do not override the defaults, which
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// means any target is allowed, and the default is native. Other options
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// for restricting supported target set are available.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> target <span style="color:#f92672">=</span> b.standardTargetOptions(.{});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Standard release options allow the person running `zig build` to select
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> mode <span style="color:#f92672">=</span> b.standardReleaseOptions();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.addExecutable(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
+</span></span><span style="display:flex;"><span>    exe.setTarget(target);
+</span></span><span style="display:flex;"><span>    exe.setBuildMode(mode);
+</span></span><span style="display:flex;"><span>    exe.install();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> run_cmd <span style="color:#f92672">=</span> exe.run();
+</span></span><span style="display:flex;"><span>    run_cmd.step.dependOn(b.getInstallStep());
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> run_step <span style="color:#f92672">=</span> b.step(<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#e6db74">&#34;Run the app&#34;</span>);
+</span></span><span style="display:flex;"><span>    run_step.dependOn(<span style="color:#f92672">&amp;</span>run_cmd.step);
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -670,11 +685,11 @@ pub fn <span style="color:#a6e22e">build</span>(b: <span style="color:#f92672">*
 <p>
 たぶん普通のアプリをかくなら malloc とかで libc は必要。この辺、デフォルトで何もついてないのが真のシステム用言語という感じがしますね。</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.addExecutable(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
-    exe.setTarget(target);
-    exe.setBuildMode(mode);
-    exe.linkSystemLibrary(<span style="color:#e6db74">&#34;c&#34;</span>);  <span style="color:#75715e">// -lc がビルドオプションに追加される
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.addExecutable(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
+</span></span><span style="display:flex;"><span>    exe.setTarget(target);
+</span></span><span style="display:flex;"><span>    exe.setBuildMode(mode);
+</span></span><span style="display:flex;"><span>    exe.linkSystemLibrary(<span style="color:#e6db74">&#34;c&#34;</span>);  <span style="color:#75715e">// -lc がビルドオプションに追加される
+</span></span></span></code></pre></div>
 </div>
 <p>
 コマンドラインから <code>zig build run</code> で実行。</p>
@@ -695,15 +710,15 @@ test ブロック
 <p>
 D言語みたいにテスト用の構文がある。これはとても便利で、REPL的に使って言語の確認をしたり便利。</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">const</span> std <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span>import(<span style="color:#e6db74">&#34;std&#34;</span>);
-
-fn <span style="color:#a6e22e">f</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
-}
-
-test <span style="color:#e6db74">&#34;f&#34;</span> {
-    std.debug.assert(f() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
-}</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> std <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span>import(<span style="color:#e6db74">&#34;std&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fn <span style="color:#a6e22e">f</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>test <span style="color:#e6db74">&#34;f&#34;</span> {
+</span></span><span style="display:flex;"><span>    std.debug.assert(f() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -715,11 +730,11 @@ build.zig に テストの追加
 <p>
 正直、これで良いのかわかっていませんが、動いている・ちゃんと失敗するのでとりあえず。</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">    <span style="color:#66d9ef">const</span> test_step <span style="color:#f92672">=</span> b.step(<span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#e6db74">&#34;Test the app&#34;</span>);
-    <span style="color:#66d9ef">const</span> main_test <span style="color:#f92672">=</span> b.addTest(<span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
-    main_test.linkSystemLibrary(<span style="color:#e6db74">&#34;c&#34;</span>);
-    test_step.dependOn(<span style="color:#f92672">&amp;</span>main_test.step); <span style="color:#75715e">// 同じように複数ファイル追加も可能
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> test_step <span style="color:#f92672">=</span> b.step(<span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#e6db74">&#34;Test the app&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> main_test <span style="color:#f92672">=</span> b.addTest(<span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
+</span></span><span style="display:flex;"><span>    main_test.linkSystemLibrary(<span style="color:#e6db74">&#34;c&#34;</span>);
+</span></span><span style="display:flex;"><span>    test_step.dependOn(<span style="color:#f92672">&amp;</span>main_test.step); <span style="color:#75715e">// 同じように複数ファイル追加も可能
+</span></span></span></code></pre></div>
 </div>
 <p>さっしの通り <code>b.step(コマンド名, 説明)</code> で定義したコマンドを <code>zig build コマンド名</code> で動かせるようだ。かなり汎用。</p>
 </div>
@@ -737,42 +752,18 @@ build.zig に テストの追加
 </h3>
 <div id="outline-text-headline-9" class="outline-text-3">
 <ul>
-<li>
-<p>全部明示的に書く思想が読みやすい。dtorの代わりにdefer、例外の代わりにerror union、overloadなし、という潔さ。</p>
-</li>
-<li>
-<p>構文が簡単。<a href="https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.y">yaccで500行</a>というミニマルさ。<a href="https://github.com/ruby/ruby/blob/v2_7_1/parse.y">Rubyのparse.y</a>とかと比べるとすごい。</p>
-</li>
-<li>
-<p><code>union(enum)</code> タグ付きユニオンというやつ。システム系でよくあるパターンを楽に。</p>
-</li>
-<li>
-<p>値にできそうなものは全部値になってる。名前空間とか型情報とかも値。</p>
-</li>
-<li>
-<p>いろんな構文が式で結果を返してくれるところ。短くかける。</p>
-</li>
-<li>
-<p>関数の引数が値か参照かはコンパイラが決める。デフォルトでimmutableだとこういうのがいい。</p>
-</li>
-<li>
-<p>言語機能のoptional型 <code>?T</code> 。ポインタのoptionalはポインタと同じサイズになるのも嬉しい。</p>
-</li>
-<li>
-<p>言語機能のerror union型。スタックトレースでるので実質例外だと思うけど、共有体として Eitherみたいな if/else や switch もできて文法的に便利。</p>
-</li>
-<li>
-<p>上に関連して <code>!T</code> や <code>try</code> 式で、明示的にerrorやoptional投げるところがわかる。。</p>
-</li>
-<li>
-<p><code>defer</code> D言語でいう <code>scope(exit)</code> で、初期化と最終化を並べてかける。</p>
-</li>
-<li>
-<p>WASMをサポートしているところ。そのせいでallocatorとかに依存できない標準ライブラリが結構渋いが。</p>
-</li>
-<li>
-<p>多機能な async/await 構文がある。初見では、なぜここまで多機能なのかわからなかったが、coroutineをやりたいのだろうか。</p>
-</li>
+<li>全部明示的に書く思想が読みやすい。dtorの代わりにdefer、例外の代わりにerror union、overloadなし、という潔さ。</li>
+<li>構文が簡単。<a href="https://github.com/ziglang/zig-spec/blob/master/grammar/grammar.y">yaccで500行</a>というミニマルさ。<a href="https://github.com/ruby/ruby/blob/v2_7_1/parse.y">Rubyのparse.y</a>とかと比べるとすごい。</li>
+<li><code>union(enum)</code> タグ付きユニオンというやつ。システム系でよくあるパターンを楽に。</li>
+<li>値にできそうなものは全部値になってる。名前空間とか型情報とかも値。</li>
+<li>いろんな構文が式で結果を返してくれるところ。短くかける。</li>
+<li>関数の引数が値か参照かはコンパイラが決める。デフォルトでimmutableだとこういうのがいい。</li>
+<li>言語機能のoptional型 <code>?T</code> 。ポインタのoptionalはポインタと同じサイズになるのも嬉しい。</li>
+<li>言語機能のerror union型。スタックトレースでるので実質例外だと思うけど、共有体として Eitherみたいな if/else や switch もできて文法的に便利。</li>
+<li>上に関連して <code>!T</code> や <code>try</code> 式で、明示的にerrorやoptional投げるところがわかる。。</li>
+<li><code>defer</code> D言語でいう <code>scope(exit)</code> で、初期化と最終化を並べてかける。</li>
+<li>WASMをサポートしているところ。そのせいでallocatorとかに依存できない標準ライブラリが結構渋いが。</li>
+<li>多機能な async/await 構文がある。初見では、なぜここまで多機能なのかわからなかったが、coroutineをやりたいのだろうか。</li>
 </ul>
 <p>でも変なところもある、for 文が配列専用で、while文が従来のfor文みたいな役割になってるのは慣れない。<a href="https://ziglang.org/documentation/0.6.0/#Style-Guide">公式のコーディングスタイル</a>も独特である(変数と名前空間はsnake_case、関数はcamelCase、型と型関数はTitleCase)。とはいえ慣れの問題といえばそう。</p>
 </div>
@@ -830,13 +821,13 @@ hugo <sup class="footnote-reference"><a id="footnote-reference-1" href="#footnot
 <p>
 いまどきブログなんて流行らないだろうけど、逆に今時cssもほとんどないサイトって懐かしくていいなと。たまたまHTMLだけのすごくシンプルな雛形 <sup class="footnote-reference"><a id="footnote-reference-2" href="#footnote-2">2</a></sup> を見ながら書きました。唯一 <code>&lt;table&gt;</code> タグだけイマイチなのでcss書いた。とりあえず数行の css と js なので全部 <a href="https://github.com/klknn/klknn.github.io/blob/6d58363642f64cc775b023eb1b79e06734407828/layouts/_default/baseof.html#L6-L28">layouts/_default/baseof.html</a> に突っ込んでいます。こういうので良いと思い始めた。真似したい人は layouts 以下をまるごとコピーして config.toml の中身</p>
 <div class="src src-toml">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#34;https://klknn.github.io/&#34;</span>
-<span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#34;ja&#34;</span>
-<span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;klknn log&#34;</span>
-
-[<span style="color:#a6e22e">params</span>]
-  <span style="color:#a6e22e">author</span> = <span style="color:#e6db74">&#34;klknn&#34;</span>
-  <span style="color:#a6e22e">editURL</span> = <span style="color:#e6db74">&#34;https://github.com/klknn/klknn.github.io/edit/develop/content&#34;</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-toml" data-lang="toml"><span style="display:flex;"><span><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#34;https://klknn.github.io/&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">languageCode</span> = <span style="color:#e6db74">&#34;ja&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">title</span> = <span style="color:#e6db74">&#34;klknn log&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[<span style="color:#a6e22e">params</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">author</span> = <span style="color:#e6db74">&#34;klknn&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">editURL</span> = <span style="color:#e6db74">&#34;https://github.com/klknn/klknn.github.io/edit/develop/content&#34;</span></span></span></code></pre></div>
 </div>
 <p>を適宜かきかえると良いです。ちなみに書いてある author をテンプレート html 内でアクセスしたいときは
 <code>{{ .Site.Params.Author }}</code>
@@ -844,11 +835,11 @@ hugo <sup class="footnote-reference"><a id="footnote-reference-1" href="#footnot
 <p>
 ちなみに手元のPC (192.168.0.13) で編集中のサイトを、同じネットワーク上のスマホから見るには以下のようにhugo起動して、スマホから <a href="http://192.168.0.13:1313">http://192.168.0.13:1313</a> を表示します</p>
 <div class="src src-bash">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo serve -D --bind 192.168.0.13 --baseURL<span style="color:#f92672">=</span>http://192.168.0.13</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hugo serve -D --bind 192.168.0.13 --baseURL<span style="color:#f92672">=</span>http://192.168.0.13</span></span></code></pre></div>
 </div>
 <p>とくにcssもないし、とくにレスポンシブでもないので醜いですが。とりあえずGoogleのブログ <sup class="footnote-reference"><a id="footnote-reference-3" href="#footnote-3">3</a></sup> にあった</p>
 <div class="src src-html">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, initial-scale=1&#34;</span>&gt;</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viewport&#34;</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width, initial-scale=1&#34;</span>&gt;</span></span></code></pre></div>
 </div>
 <p>は入れておいたので多少マシかと思いますが、深追いしないでおこうと思います。</p>
 <p>
@@ -880,8 +871,7 @@ hugo <sup class="footnote-reference"><a id="footnote-reference-1" href="#footnot
 caption for image.
 code block def f(x): return x * x math \begin{align} \label{eq:sample} f(x) = x^2 \end{align}
 table aaaaaaaa bb c 1 2 3 4 5 6 Eq. \eqref{eq:sample} $x^2$
-this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;
-...</summary><content type="html"><![CDATA[<h2 id="footnote">footnote</h2>
+this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;...</summary><content type="html"><![CDATA[<h2 id="footnote">footnote</h2>
 <p>hello<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <p><img src="/emacs-company-dcd.png" alt="emacs-company-dcd.png"></p>
 <figure><img src="/emacs-company-dcd.png"
@@ -891,9 +881,9 @@ this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;
 </figure>
 
 <h2 id="code-block">code block</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
-	<span style="color:#66d9ef">return</span> x <span style="color:#f92672">*</span> x
-</code></pre></div><h2 id="math">math</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> x <span style="color:#f92672">*</span> x
+</span></span></code></pre></div><h2 id="math">math</h2>
 <p>\begin{align}
 \label{eq:sample}
 f(x) = x^2
@@ -921,14 +911,14 @@ f(x) = x^2
 </tbody>
 </table>
 <p>Eq. \eqref{eq:sample} $x^2$</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
+<li id="fn:1">
 <p>this is footnote&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 ]]></content></entry><entry><title>Org-mode examples</title><link href="https://klknn.github.io/posts/hello-org/"/><id>https://klknn.github.io/posts/hello-org/</id><published>2020-07-06T20:51:03+0900</published><updated>2020-07-06T20:51:03+0900</updated><summary type="html">org-mode usage in hugo....</summary><content type="html"><![CDATA[
 <p>
 this page shows how to use org-mode in hugo.
@@ -974,8 +964,8 @@ code block
 </h2>
 <div id="outline-text-headline-4" class="outline-text-2">
 <div class="src src-python">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
-	<span style="color:#66d9ef">return</span> x <span style="color:#f92672">*</span> x</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">f</span>(x):
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> x <span style="color:#f92672">*</span> x</span></span></code></pre></div>
 </div>
 </div>
 </div>
