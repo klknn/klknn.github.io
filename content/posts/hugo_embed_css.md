@@ -33,7 +33,7 @@ CSSを試行錯誤中なのですがブラウザのキャッシュが効いて�
 
 でてくる関数の詳細は https://gohugo.io/categories/asset-management を読んでください。SCSSを使うには extended と書いてあるバイナリを使う必要があるので注意です。生成されたファイルは `/resources/_gen/*` に作られるので `.gitignore` などに含めておくと良いでしょう
 
-ちなみにSCSSはCSSと概ね互換性があるので、そのまま読めます。文法はここ　https://sass-lang.com/documentation/syntax より https://sass-lang.com/guide のほうが簡単にまとまってていいです。今回はとりあえず変数と演算を使ってページの幅とか調整しました。正直文法が気持ち悪いのであまり深追いしたくはないです。
+ちなみにSCSSはCSSと概ね互換性があるので、元ファイルがそのまま読めました。文法は https://sass-lang.com/guide のほうが https://sass-lang.com/documentation/syntax より簡単にまとまってていいです。今回はとりあえず変数と演算を使ってページの幅とか調整しました。正直文法が気持ち悪いのであまり深追いしたくはないです。
 
 ## まとめ
 
