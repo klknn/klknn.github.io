@@ -1,5 +1,6 @@
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-08-29T03:07:46+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>ファンレス M1 MacBook Air にサーマルパッドを貼った結果</title><link href="https://klknn.github.io/posts/20220829-macbook-thermal/"/><id>https://klknn.github.io/posts/20220829-macbook-thermal/</id><published>2022-08-29T03:07:46+0900</published><updated>2022-08-29T03:07:46+0900</updated><summary type="html">ネットでMacBook Airにサーマルパッドを貼ると，重たいタスクもMacBook Pro並に高性能になるという噂を聞き，DTMで検証しました．検証結果は非常に効果が限定的なのでDTMerがやる価値はないという結論．
-...</summary><content type="html"><![CDATA[<p>ネットでMacBook Airにサーマルパッドを貼ると，重たいタスクもMacBook Pro並に高性能になるという噂を聞き，DTMで検証しました．検証結果は非常に効果が限定的なのでDTMerがやる価値はないという結論．</p>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-08-29T03:07:46+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>ファンレス M1 MacBook Air にサーマルパッドを貼った結果</title><link href="https://klknn.github.io/posts/20220829-macbook-thermal/"/><id>https://klknn.github.io/posts/20220829-macbook-thermal/</id><published>2022-08-29T03:07:46+0900</published><updated>2022-08-29T03:07:46+0900</updated><summary type="html">ネットでMacBook Airにサーマルパッドを貼ると，重たいタスクもMacBook Pro並に高性能になるという噂を聞き，DTMで検証しました．検証結果は効果が限定的な ので敢えてやる価値はないという結論になりました．
+...</summary><content type="html"><![CDATA[<p>ネットでMacBook Airにサーマルパッドを貼ると，重たいタスクもMacBook Pro並に高性能になるという噂を聞き，DTMで検証しました．検証結果は効果が限定的な
+ので敢えてやる価値はないという結論になりました．</p>
 <h2 id="macbook-airにサーマルパッドを貼る">MacBook Airにサーマルパッドを貼る</h2>
 <p>ネジを外したのに裏蓋が開かなくて，<a href="https://jp.ifixit.com/Guide/MacBook+Air+13%E3%82%A4%E3%83%B3%E3%83%81+Late+2020+%E4%B8%8B%E9%83%A8%E3%82%B1%E3%83%BC%E3%82%B9%E3%81%AE%E4%BA%A4%E6%8F%9B/142550">iFixit</a> の持ち方以外ではどんなに力入れても絶対開かなかった．ありがとうiFixit．</p>
 <p>パッドの貼り方は言葉で伝えるのが面倒なので，このツイートの画像を見てください:</p>
@@ -78,7 +79,7 @@
 <p>こちらも実際には47トラックあたりから再生が怪しくなってきました．操作の反応は限界付近でも少し余裕がありました．なお，どれだけ再生を続けても64度台には突入しませんでした．さらに再生をとめると数秒で40度台まで冷える明らかな違いがありました．</p>
 <p>さらにCPUが60度を超えてる状態で，実際に放熱してる箇所を触ってみました．従来熱くなるはずの画面の近くではとくに熱を感じず，従来熱くならない筐体裏側はほんのり温かかったです．具体的にはエアコンないところでは不快なレベルであり，膝の上に載せるのをためらわないギリギリの熱さです．昔使っていた2009年のIntel C2D MacBook Proはこれくらい発熱してたので懐かしくなりました．</p>
 <h2 id="まとめ">まとめ</h2>
-<p>効果はあるが非常に限定的だったので，あまりやる意味はないかもしれません．工場出荷時にファンレスかつサーマルパッドなしでここまで発熱少ないM1自体が驚異的です．</p>
+<p>冷却効果はあるものの非常に限定的だったので，やる意味はないかもしれません．工場出荷時にファンレスかつサーマルパッドなしでここまで発熱少ないM1自体が驚異的でしたね．</p>
 <p>ベンチマーク結果についてはこれまでMacBookは最大96kHzで40トラック以上重いシンセが同時に鳴るわけで，これなら大抵の曲は快適に作れるので気に入ってます．</p>]]></content></entry><entry><title>HugoにおけるCSSの埋め込みと後処理</title><link href="https://klknn.github.io/posts/hugo_embed_css/"/><id>https://klknn.github.io/posts/hugo_embed_css/</id><published>2022-08-26T04:55:30+0900</published><updated>2022-08-26T04:55:30+0900</updated><summary type="html">CSSを試行錯誤中なのですがブラウザのキャッシュが効いて反映されないため面倒だなと思い、Hugo の asset 管理を使ってHTMLに埋め込んでみました。 おまけに最小化やSCSSの導入など、思わぬ副次効果もありました。
 ...</summary><content type="html"><![CDATA[<p>CSSを試行錯誤中なのですがブラウザのキャッシュが効いて反映されないため面倒だなと思い、Hugo の asset 管理を使ってHTMLに埋め込んでみました。
 おまけに最小化やSCSSの導入など、思わぬ副次効果もありました。</p>
