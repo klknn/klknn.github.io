@@ -2,7 +2,7 @@
 title: "モニタースピーカー買い替えで悩む"
 date: 2022-08-20T15:14:12+09:00
 draft: false
-tags: ["DTM"]
+tags: ["dtm"]
 isCJKLanguage: true
 ---
 
