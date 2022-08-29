@@ -6,19 +6,44 @@
 {{ "<!-- _default/single.html start -->" | safeHTML }}
 
 <h1>{{- .Title -}}</h1>
-<ul>
-date: {{ .Date.Format "2006-01-02 15:04:05 MST" }} <a href="{{ .Site.Params.EditURL }}/{{ .File }}">edit</a>
-</ul>
-<ul>
-tags: {{ range .Params.tags -}}
-  <a href="{{ print "/tags/" . | relURL }}/">{{ . }}</a>
-{{ end -}}
-</ul>
-<div class="toc">
-  Table of contents
-{{.TableOfContents}}
+
+<div class="single-metadata">
+  <ul>
+    <li>
+      date: {{ .Date.Format "2006-01-02 15:04:05 MST" }} <a href="{{ .Site.Params.EditURL }}/{{ .File }}">edit</a>
+    </li>
+
+    <li>
+      tags: {{ range .Params.tags -}}
+      <a href="{{ print "/tags/" . | relURL }}/">{{ . }}</a>
+      {{ end -}}
+    </li>
+
+{{ with .TableOfContents }}
+    <li>toc: {{ . }}
+    </li>
+    {{ end }}
+  </ul>
 </div>
 {{ .Content }}
+
+<div class="neighbour-pages">
+  <hr>
+
+  <p><a href="#">Back to top</a></p>
+
+  {{ with .PrevInSection }}
+  <p><a href="{{ .Permalink }}">
+      Prev: {{ .LinkTitle | truncate $.Site.Params.neighbourTitleLength }}
+  </a></p>
+  {{ end }}
+
+  {{ with .NextInSection }}
+  <p><a href="{{ .Permalink }}">
+      Next: {{ .LinkTitle | truncate $.Site.Params.neighbourTitleLength }}
+  </a></p>
+  {{ end }}
+</div>
 
 {{ "<!-- _default/single.html end -->" | safeHTML }}
 {{ end }}

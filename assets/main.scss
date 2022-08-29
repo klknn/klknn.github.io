@@ -15,14 +15,17 @@ h1, h2, h3, h4, h5, h6 {
     max-width: $content-max-width;
 }
 .toc {
+    margin: 0 auto;
     max-width: $content-sub-max-width;
-    padding: 1rem;
-    border: dotted;
+    padding: 0 1rem;
 }
-p, .highlight, .gist-file, figure, div, hr {
+.neighbour-pages {
+    font-style: italic;
+    padding: 1rem;
+}
+p, .highlight, .gist-file, figure, hr {
     margin: 1rem auto;
     max-width: $content-max-width;
-    width: 90%;
 }
 blockquote {
     margin: 1rem auto;

@@ -6,3 +6,4 @@ summaryLength = 300
 [params]
   author = "klknn"
   editURL = "https://github.com/klknn/klknn.github.io/edit/develop/content"
+  neighbourTitleLength = 30
