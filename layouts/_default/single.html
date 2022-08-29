@@ -14,9 +14,9 @@
     </li>
 
     <li>
-      tags: {{ range .Params.tags -}}
-      <a href="{{ print "/tags/" . | relURL }}/">{{ . }}</a>
-      {{ end -}}
+      tags:
+      {{ range $i, $tag := .Params.tags }}{{ if ne $i 0 }}, {{ end }}
+      <a href="{{ print "/tags/" $tag | relURL }}/">{{ $tag }}</a>{{ end }}
     </li>
 
 {{ with .TableOfContents }}

@@ -14,10 +14,10 @@ h1, h2, h3, h4, h5, h6 {
     margin: 2rem auto 1rem;
     max-width: $content-max-width;
 }
-.toc {
+.single-metadata {
     margin: 0 auto;
     max-width: $content-sub-max-width;
-    padding: 0 1rem;
+    border: dotted;
 }
 .neighbour-pages {
     font-style: italic;
