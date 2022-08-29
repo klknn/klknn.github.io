@@ -5,4 +5,4 @@
 caption for image.
 code block def f(x): return x * x math \begin{align} \label{eq:sample} f(x) = x^2 \end{align}
 table aaaaaaaa bb c 1 2 3 4 5 6 Eq. \eqref{eq:sample} $x^2$
-this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description></item><item><title>Org-mode examples</title><link>https://klknn.github.io/posts/hello-org/</link><pubDate>Mon, 06 Jul 2020 20:51:03 +0900</pubDate><guid>https://klknn.github.io/posts/hello-org/</guid><description>org-mode usage in hugo.</description></item></channel></rss>
+list aaa bb aaaaaaaa bbbb this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;</description></item><item><title>Org-mode examples</title><link>https://klknn.github.io/posts/hello-org/</link><pubDate>Mon, 06 Jul 2020 20:51:03 +0900</pubDate><guid>https://klknn.github.io/posts/hello-org/</guid><description>org-mode usage in hugo.</description></item></channel></rss>

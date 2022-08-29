@@ -955,7 +955,7 @@ hugo <sup class="footnote-reference"><a id="footnote-reference-1" href="#footnot
 caption for image.
 code block def f(x): return x * x math \begin{align} \label{eq:sample} f(x) = x^2 \end{align}
 table aaaaaaaa bb c 1 2 3 4 5 6 Eq. \eqref{eq:sample} $x^2$
-this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;...</summary><content type="html"><![CDATA[<h2 id="footnote">footnote</h2>
+list aaa bb aaaaaaaa bbbb this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;...</summary><content type="html"><![CDATA[<h2 id="footnote">footnote</h2>
 <p>hello<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <p><img src="/emacs-company-dcd.png" alt="emacs-company-dcd.png"></p>
 <figure><img src="/emacs-company-dcd.png"
@@ -995,6 +995,15 @@ f(x) = x^2
 </tbody>
 </table>
 <p>Eq. \eqref{eq:sample} $x^2$</p>
+<h2 id="list">list</h2>
+<ol>
+<li>aaa</li>
+<li>bb</li>
+</ol>
+<ul>
+<li>aaaaaaaa</li>
+<li>bbbb</li>
+</ul>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
