@@ -23,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
     padding: 1rem;
 }
-p, .highlight, .gist-file, figure, hr {
+p, .highlight, .gist-file, figure, hr, .twitter-tweet {
     margin: 1rem auto;
     max-width: $content-max-width;
 }
@@ -33,7 +33,7 @@ blockquote {
     font-style: italic;
     border-left: solid 5px;
 }
-ul, li {
+ol, ul, li {
     margin: 0.75rem auto;
     max-width: $content-max-width;
 }

@@ -39,3 +39,11 @@ f(x) = x^2
 
 
 Eq. \eqref{eq:sample} $x^2$
+
+## list
+
+1. aaa
+2. bb
+
+- aaaaaaaa
+- bbbb
