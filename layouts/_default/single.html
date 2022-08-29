@@ -19,9 +19,8 @@
       <a href="{{ print "/tags/" $tag | relURL }}/">{{ $tag }}</a>{{ end }}
     </li>
 
-{{ with .TableOfContents }}
-    <li>toc: {{ . }}
-    </li>
+    {{ with .TableOfContents }}
+    <li>toc: {{ . }}</li>
     {{ end }}
   </ul>
 </div>

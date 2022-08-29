@@ -15,17 +15,22 @@ h1, h2, h3, h4, h5, h6 {
     max-width: $content-max-width;
 }
 .single-metadata {
-    margin: 0 auto;
-    max-width: $content-sub-max-width;
+    margin: auto;
+    padding: auto;
+    line-height: 0.5rem;
+    max-width: $content-max-width;
     border: dotted;
 }
 .neighbour-pages {
     font-style: italic;
     padding: 1rem;
 }
-p, .highlight, .gist-file, figure, hr, .twitter-tweet {
+p, .highlight, .gist-file, figure, hr, .twitter-tweet, .footnotes {
     margin: 1rem auto;
     max-width: $content-max-width;
+}
+.footnote-body {
+    margin: 1rem;
 }
 blockquote {
     margin: 1rem auto;
