@@ -1,8 +1,8 @@
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-09-07T16:31:27+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>A7X買った</title><link href="https://klknn.github.io/posts/20220907-a7x/"/><id>https://klknn.github.io/posts/20220907-a7x/</id><published>2022-09-07T16:31:27+0900</published><updated>2022-09-07T16:31:27+0900</updated><summary type="html">モニタースピーカー買い替えで悩むという記事に予告していた通り、Adamの7インチを買いました。 ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。
-...</summary><content type="html"><![CDATA[<p><a href="speaker_trial.md">モニタースピーカー買い替えで悩む</a>という記事に予告していた通り、Adamの7インチを買いました。
-ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。</p>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-09-07T16:31:27+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>A7X買った</title><link href="https://klknn.github.io/posts/20220907-a7x/"/><id>https://klknn.github.io/posts/20220907-a7x/</id><published>2022-09-07T16:31:27+0900</published><updated>2022-09-07T16:31:27+0900</updated><summary type="html">以前の記事に予告していた通り、Adamの7インチを買いました。ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。
+...</summary><content type="html"><![CDATA[<p>以前の記事に予告していた通り、Adamの7インチを買いました。ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。</p>
 <h2 id="a7vでなくa7xに決めた理由">A7VでなくA7Xに決めた理由</h2>
-<p>DSPが96kHzしか対応してなかったので、ハイエンドのIFで192kHzで鳴らしても確認できないのが最も嫌でした。
+<p>さすがにもう10年以上経っているので、中古で値段が安かったから。</p>
+<p>二番目の理由はDSPが96kHzしか対応してなかったので、ハイエンドのIFで192kHzで鳴らしても確認できないのが最も嫌でした。
 複雑な電子回路だと故障とか耐用年数が怖いです。
 逆に未だにテンモニが使われてるのはアンプレスで構造が単純だから、
 部品交換で修理できるからだろうなと思っています。</p>
