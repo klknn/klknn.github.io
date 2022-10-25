@@ -1,4 +1,17 @@
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-09-07T16:31:27+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>A7X買った</title><link href="https://klknn.github.io/posts/20220907-a7x/"/><id>https://klknn.github.io/posts/20220907-a7x/</id><published>2022-09-07T16:31:27+0900</published><updated>2022-09-07T16:31:27+0900</updated><summary type="html">以前の記事に予告していた通り、Adamの7インチを買いました。ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2022-10-25T10:25:33+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>2022 9-10月の振り返り</title><link href="https://klknn.github.io/posts/20221025/"/><id>https://klknn.github.io/posts/20221025/</id><published>2022-10-25T10:25:33+0900</published><updated>2022-10-25T10:25:33+0900</updated><summary type="html">雑多な9-10月のプログラミングや育児など振り返りです。
+...</summary><content type="html"><![CDATA[<p>雑多な9-10月のプログラミングや育児など振り返りです。</p>
+<p><img src="https://user-images.githubusercontent.com/57452864/197662566-3e9cc97c-b8a0-497f-a379-41a5569f9036.png" alt="900STの画像"></p>
+<h2 id="音楽">音楽</h2>
+<p>あんまりやれてないですね。4小節くらいループ作っては広がらなくて捨てる日々です。そういうのも上げていこうかな。</p>
+<p>創作が捗らないときは機材買ったり、メンテするのが一番です。ここ5年位使ってなかった900STを修理しました、これは一番最初に使ったモニターヘッドホンで15年は使ってます。サウンドハウスの失効間近のポイントでウレタンリングとイヤーパッドを買いました。</p>
+<p>交換した感想は、若干耳に刺さる部分が弱まったけども、相変わらずあまり好きな音ではなかった&hellip;です。</p>
+<h2 id="プログラミング">プログラミング</h2>
+<p>9月はDplug関連のバグ修正（msysでdplug-buildのメッセージがでてこない、DMDでsimd関連のコードがビルドできない、etc）を結構やれましたが、10月は全然ですね。</p>
+<p><img src="https://user-images.githubusercontent.com/57452864/197662990-b59661ce-b68f-472e-b003-c650f797401a.png" alt="image"></p>
+<p>複数プラグイン作るときにEQとかオシレータとかどうせ使い回すから、monorepoにしたほうが良いと思ってこちらに移行しました。よろしくお願いします <a href="https://github.com/klknn/kdr">https://github.com/klknn/kdr</a></p>
+<h2 id="育児">育児</h2>
+<p>3ヶ月になりました。あまり泣かない子供なのですが泣き方にバラエティがでてきて、もうこれ言葉なんじゃない？という感じでバラエティがあります。機会があれば録音しておきます。</p>
+<p>あまり大したことない病気があり、毎週通院してましたが、かなり良くなって今は予防接種のときに経過観察と処方してもらうだけで、それがかなり楽になりました。今後も健康に過ごしてほしい。</p>]]></content></entry><entry><title>A7X買った</title><link href="https://klknn.github.io/posts/20220907-a7x/"/><id>https://klknn.github.io/posts/20220907-a7x/</id><published>2022-09-07T16:31:27+0900</published><updated>2022-09-07T16:31:27+0900</updated><summary type="html">以前の記事に予告していた通り、Adamの7インチを買いました。ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。
 ...</summary><content type="html"><![CDATA[<p>以前の記事に予告していた通り、Adamの7インチを買いました。ただし現行のA7Vでなく中古のA7Xです。結論としては大満足。</p>
 <p><img src="https://pbs.twimg.com/media/FbP-lOiacAAEcZn?format=jpg" alt="a7x"></p>
 <h2 id="a7vでなくa7xに決めた理由">A7VでなくA7Xに決めた理由</h2>
