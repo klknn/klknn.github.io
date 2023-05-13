@@ -4,6 +4,14 @@ layout: "plain"
 isCJKLanguage: true
 ---
 
+## Streaming
+
+- [spotify](https://open.spotify.com/artist/1XqKimFNHNGJNdEgCFTtJI)
+- [youtube music](https://music.youtube.com/channel/UCIPmVvRd2RWlpV-ZNHH-mnQ)
+- [amazon music](https://music.amazon.co.jp/artists/B0C278FVF5/klknn)
+- [apple music](https://music.apple.com/jp/artist/klknn/1682443055)
+- [line music](https://music.line.me/webapp/artist/mi000000001d75369c)
+
 ## music
 
 Visit https://soundcloud.com/kr1nu to find more.
