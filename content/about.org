@@ -2,5 +2,6 @@
 #+toc: false
 #+layout: plain
 
-name: klknn
-https://github.com/klknn
+- Name: klknn
+- GitHub https://github.com/klknn
+- Twitter https://twitter.com/klknn_
