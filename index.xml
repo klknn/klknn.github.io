@@ -87,8 +87,9 @@ NS10MはともかくBX5は使わなくなりそう、テレビとかにつなご
 <h2 id="サーマルパッドを貼る">サーマルパッドを貼る</h2>
 <p>ネジを外したのに裏蓋が開かなくて焦りました。<a href="https://jp.ifixit.com/Guide/MacBook+Air+13%E3%82%A4%E3%83%B3%E3%83%81+Late+2020+%E4%B8%8B%E9%83%A8%E3%82%B1%E3%83%BC%E3%82%B9%E3%81%AE%E4%BA%A4%E6%8F%9B/142550">iFixit</a> の持ち方以外ではどんなに力入れても絶対開かなかった．ありがとうiFixit．</p>
 <p>パッドの貼り方は言葉で伝えるのが面倒なので，このツイートの画像を見てください:</p>
-<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">マックのCPUにサーマルパッド貼り、裏板の断熱材剥がしました <a href="https://t.co/ghNStHjlfx">pic.twitter.com/ghNStHjlfx</a></p>&mdash; 力刂夕 (@kr1nu) <a href="https://twitter.com/kr1nu/status/1563951104479547392?ref_src=twsrc%5Etfw">August 28, 2022</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">マックのCPUにサーマルパッド貼り、裏板の断熱材剥がしました <a href="https://t.co/ghNStHjlfx">pic.twitter.com/ghNStHjlfx</a></p>&mdash; カリタ (@kr1nu) <a href="https://twitter.com/kr1nu/status/1563951104479547392?ref_src=twsrc%5Etfw">August 28, 2022</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 
 <h2 id="ベンチマーク設定">ベンチマーク設定</h2>
 <p>室温25.0度，Mac内蔵ヘッドフォン出力 96kHz 1024 sample bufferを再生デバイスとして， 以下のリンクにあるLogicAlchemyTest.logicxを使いベンチマークしました．</p>
