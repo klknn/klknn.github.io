@@ -1,4 +1,4 @@
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2024-05-06T20:25:33+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.101.0">Hugo</generator><id>https://klknn.github.io/</id><entry><title>IK ARC Studio、バイオリン購入など</title><link href="https://klknn.github.io/posts/20240506/"/><id>https://klknn.github.io/posts/20240506/</id><published>2024-05-06T20:25:33+0900</published><updated>2024-05-06T20:25:33+0900</updated><summary type="html">色々と買い物をした。
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja"><title>klknn log</title><link href="https://klknn.github.io/"/><updated>2024-05-06T20:25:33+0900</updated><author><name>klknn</name></author><generator uri="https://gohugo.io" version="0.125.6">Hugo</generator><id>https://klknn.github.io/</id><entry><title>IK ARC Studio、バイオリン購入など</title><link href="https://klknn.github.io/posts/20240506/"/><id>https://klknn.github.io/posts/20240506/</id><published>2024-05-06T20:25:33+0900</published><updated>2024-05-06T20:25:33+0900</updated><summary type="html">色々と買い物をした。
 ...</summary><content type="html"><![CDATA[<p>色々と買い物をした。</p>
 <h2 id="ik-multimedia-arc-studio">IK Multimedia ARC STUDIO</h2>
 <p><a href="https://www.ikmultimedia.com/products/arcstudio/">https://www.ikmultimedia.com/products/arcstudio/</a></p>
@@ -710,27 +710,27 @@ H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q}
 <p>
 これでこんなファイルが生成される</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> Builder <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span>import(<span style="color:#e6db74">&#34;std&#34;</span>).build.Builder;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> Builder <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">import</span>(<span style="color:#e6db74">&#34;std&#34;</span>).build.Builder;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>pub fn <span style="color:#a6e22e">build</span>(b: <span style="color:#f92672">*</span>Builder) <span style="color:#66d9ef">void</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Standard target options allows the person running `zig build` to choose
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// what target to build for. Here we do not override the defaults, which
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// means any target is allowed, and the default is native. Other options
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// for restricting supported target set are available.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> target <span style="color:#f92672">=</span> b.standardTargetOptions(.{});
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> target <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">standardTargetOptions</span>(.{});
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Standard release options allow the person running `zig build` to select
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> mode <span style="color:#f92672">=</span> b.standardReleaseOptions();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> mode <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">standardReleaseOptions</span>();
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.addExecutable(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
-</span></span><span style="display:flex;"><span>    exe.setTarget(target);
-</span></span><span style="display:flex;"><span>    exe.setBuildMode(mode);
-</span></span><span style="display:flex;"><span>    exe.install();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> run_cmd <span style="color:#f92672">=</span> exe.run();
-</span></span><span style="display:flex;"><span>    run_cmd.step.dependOn(b.getInstallStep());
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> run_step <span style="color:#f92672">=</span> b.step(<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#e6db74">&#34;Run the app&#34;</span>);
-</span></span><span style="display:flex;"><span>    run_step.dependOn(<span style="color:#f92672">&amp;</span>run_cmd.step);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">addExecutable</span>(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
+</span></span><span style="display:flex;"><span>    exe.<span style="color:#a6e22e">setTarget</span>(target);
+</span></span><span style="display:flex;"><span>    exe.<span style="color:#a6e22e">setBuildMode</span>(mode);
+</span></span><span style="display:flex;"><span>    exe.<span style="color:#a6e22e">install</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> run_cmd <span style="color:#f92672">=</span> exe.<span style="color:#a6e22e">run</span>();
+</span></span><span style="display:flex;"><span>    run_cmd.step.<span style="color:#a6e22e">dependOn</span>(b.<span style="color:#a6e22e">getInstallStep</span>());
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> run_step <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">step</span>(<span style="color:#e6db74">&#34;run&#34;</span>, <span style="color:#e6db74">&#34;Run the app&#34;</span>);
+</span></span><span style="display:flex;"><span>    run_step.<span style="color:#a6e22e">dependOn</span>(<span style="color:#f92672">&amp;</span>run_cmd.step);
 </span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 </div>
 </div>
@@ -743,10 +743,10 @@ H(s) = \frac{\frac{s}{\omega_0 Q}}{\frac{s^2}{\omega_0^2} + \frac{s}{\omega_0 Q}
 <p>
 たぶん普通のアプリをかくなら malloc とかで libc は必要。この辺、デフォルトで何もついてないのが真のシステム用言語という感じがしますね。</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.addExecutable(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
-</span></span><span style="display:flex;"><span>    exe.setTarget(target);
-</span></span><span style="display:flex;"><span>    exe.setBuildMode(mode);
-</span></span><span style="display:flex;"><span>    exe.linkSystemLibrary(<span style="color:#e6db74">&#34;c&#34;</span>);  <span style="color:#75715e">// -lc がビルドオプションに追加される
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> exe <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">addExecutable</span>(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
+</span></span><span style="display:flex;"><span>    exe.<span style="color:#a6e22e">setTarget</span>(target);
+</span></span><span style="display:flex;"><span>    exe.<span style="color:#a6e22e">setBuildMode</span>(mode);
+</span></span><span style="display:flex;"><span>    exe.<span style="color:#a6e22e">linkSystemLibrary</span>(<span style="color:#e6db74">&#34;c&#34;</span>);  <span style="color:#75715e">// -lc がビルドオプションに追加される
 </span></span></span></code></pre></div>
 </div>
 <p>
@@ -768,14 +768,14 @@ test ブロック
 <p>
 D言語みたいにテスト用の構文がある。これはとても便利で、REPL的に使って言語の確認をしたり便利。</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> std <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span>import(<span style="color:#e6db74">&#34;std&#34;</span>);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> std <span style="color:#f92672">=</span> <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">import</span>(<span style="color:#e6db74">&#34;std&#34;</span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>fn <span style="color:#a6e22e">f</span>() {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
 </span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>test <span style="color:#e6db74">&#34;f&#34;</span> {
-</span></span><span style="display:flex;"><span>    std.debug.assert(f() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    std.debug.<span style="color:#a6e22e">assert</span>(<span style="color:#a6e22e">f</span>() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
 </span></span><span style="display:flex;"><span>}</span></span></code></pre></div>
 </div>
 </div>
@@ -788,10 +788,10 @@ build.zig に テストの追加
 <p>
 正直、これで良いのかわかっていませんが、動いている・ちゃんと失敗するのでとりあえず。</p>
 <div class="src src-c">
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> test_step <span style="color:#f92672">=</span> b.step(<span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#e6db74">&#34;Test the app&#34;</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> main_test <span style="color:#f92672">=</span> b.addTest(<span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
-</span></span><span style="display:flex;"><span>    main_test.linkSystemLibrary(<span style="color:#e6db74">&#34;c&#34;</span>);
-</span></span><span style="display:flex;"><span>    test_step.dependOn(<span style="color:#f92672">&amp;</span>main_test.step); <span style="color:#75715e">// 同じように複数ファイル追加も可能
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> test_step <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">step</span>(<span style="color:#e6db74">&#34;test&#34;</span>, <span style="color:#e6db74">&#34;Test the app&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> main_test <span style="color:#f92672">=</span> b.<span style="color:#a6e22e">addTest</span>(<span style="color:#e6db74">&#34;src/main.zig&#34;</span>);
+</span></span><span style="display:flex;"><span>    main_test.<span style="color:#a6e22e">linkSystemLibrary</span>(<span style="color:#e6db74">&#34;c&#34;</span>);
+</span></span><span style="display:flex;"><span>    test_step.<span style="color:#a6e22e">dependOn</span>(<span style="color:#f92672">&amp;</span>main_test.step); <span style="color:#75715e">// 同じように複数ファイル追加も可能
 </span></span></span></code></pre></div>
 </div>
 <p>さっしの通り <code>b.step(コマンド名, 説明)</code> で定義したコマンドを <code>zig build コマンド名</code> で動かせるようだ。かなり汎用。</p>
@@ -933,9 +933,9 @@ list aaa bb aaaaaaaa bbbb this is footnote&amp;#160;&amp;#x21a9;&amp;#xfe0e;...<
 <p>hello<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 <p><img src="/emacs-company-dcd.png" alt="emacs-company-dcd.png"></p>
 <figure><img src="/emacs-company-dcd.png"
-         alt="caption for image."/><figcaption>
-            <p>caption for image.</p>
-        </figcaption>
+    alt="caption for image."><figcaption>
+      <p>caption for image.</p>
+    </figcaption>
 </figure>
 
 <h2 id="code-block">code block</h2>
@@ -996,7 +996,7 @@ gist
 </h2>
 <div id="outline-text-headline-1" class="outline-text-2">
 <p>
-<script type="application/javascript" src="https://gist.github.com/spf13/7896402.js"></script>
+<script src="https://gist.github.com/spf13/7896402.js"></script>
 </p>
 </div>
 </div>
@@ -1041,10 +1041,10 @@ code block
 math
 </h2>
 <div id="outline-text-headline-5" class="outline-text-2">
-<p>\begin{align}
+\begin{align}
 \label{eq:sample}
 f(x) = x^2
-\end{align}</p>
+\end{align}
 </div>
 </div>
 <div id="outline-container-headline-6" class="outline-2">

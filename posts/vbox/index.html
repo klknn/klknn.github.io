@@ -3,7 +3,7 @@
 <a href=/tags/>tags</a> /
 <a href=/works/>works</a> /
 <a href=/index.xml>feed</a> /
-<a href=https://github.com/klknn/klknn.github.io>src</a><h1>VirtualBoxで別ディスクのOSを起動する</h1><div class=single-metadata><ul><li>date: 2023-08-11 16:25:33 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/vbox.md>edit</a></li><li>tags:
+<a href=https://github.com/klknn/klknn.github.io>src</a><h1>VirtualBoxで別ディスクのOSを起動する</h1><div class=single-metadata><ul><li>date: 2023-08-11 16:25:33 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/vbox>edit</a></li><li>tags:
 <a href=/tags/memo/>memo</a></li><li>toc:<nav id=TableOfContents></nav></li></ul></div><p>机にWindowsとLinux二台置くのはだるいし、ちょっとした動作確認とかなら性能もいらずにGUIを触れることが大事なので、一つのPCに両OSをインストールしてVirtualBoxで起動するのが便利です。</p><p>ホストOS(例Windows11)ではこんな感じで仮想ハードディスクであるvmdkファイルを作成できる。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>cd <span style=color:#e6db74>&#39;C:\Program Files\Oracle\VirtualBox\&#39;</span>
 </span></span><span style=display:flex><span>.<span style=color:#ae81ff>\V</span>BoxManage.exe createmedium -filename <span style=color:#e6db74>&#34;C:\Users\aaa\VirtualBox VMs\ubuntu22.vmdk&#34;</span> --format<span style=color:#f92672>=</span>VMDK --variant RawDisk --property RawDrive<span style=color:#f92672>=</span><span style=color:#ae81ff>\\</span>.<span style=color:#ae81ff>\P</span>HYSICALDRIVE1
 </span></span></code></pre></div><p>出力先や<code>\\.\PHYSICALDRIVE1</code> の番号は適宜disk managementなどのアプリで確認したものを指定してください。

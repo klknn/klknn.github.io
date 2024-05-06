@@ -3,7 +3,7 @@
 <a href=/tags/>tags</a> /
 <a href=/works/>works</a> /
 <a href=/index.xml>feed</a> /
-<a href=https://github.com/klknn/klknn.github.io>src</a><h1>はてなブログ的なfeedをHugoで生成</h1><div class=single-metadata><ul><li>date: 2022-08-24 23:32:31 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/posts/hugo_feed.md>edit</a></li><li>tags:
+<a href=https://github.com/klknn/klknn.github.io>src</a><h1>はてなブログ的なfeedをHugoで生成</h1><div class=single-metadata><ul><li>date: 2022-08-24 23:32:31 +0900 <a href=https://github.com/klknn/klknn.github.io/edit/develop/content/hugo_feed>edit</a></li><li>tags:
 <a href=/tags/hugo/>hugo</a></li><li>toc:<nav id=TableOfContents><ul><li><a href=#はてなのfeed>はてなのfeed</a></li><li><a href=#hugoのfeed>Hugoのfeed</a></li><li><a href=#まとめ>まとめ</a></li></ul></nav></li></ul></div><p>RSSリーダーのFeedlyを使っていて、はてなブログとかは全文リーダー内に表示されるのに、うちだけ表示されないな？と疑問に思っていました。
 今回ははてなブログのフィードとHugoのデフォルトのフィードを比べた上でよりRSSリーダーフレンドリーなフィードを構築していきます。</p><h2 id=はてなのfeed>はてなのfeed</h2><p>まずFeedlyで適当に普段読んでるhatenaブログをみてみると、取得してるURLが設定画面で把握できます。大抵は以下のようなXMLがでてきます:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=display:flex><span><span style=color:#f92672>&lt;feed</span> <span style=color:#a6e22e>xmlns=</span><span style=color:#e6db74>&#34;http://www.w3.org/2005/Atom&#34;</span> <span style=color:#a6e22e>xml:lang=</span><span style=color:#e6db74>&#34;ja&#34;</span><span style=color:#f92672>&gt;</span>
 </span></span><span style=display:flex><span>  <span style=color:#f92672>&lt;title&gt;</span>・ｘ・ぼくののうみそ<span style=color:#f92672>&lt;/title&gt;</span>
