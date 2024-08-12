@@ -10,7 +10,7 @@ $content-sub-max-width: $content-max-width - 5rem;
     a:hover { color: #f88; }
     a:active { color: #f80; }
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, {
     margin: 2rem auto 1rem;
     max-width: $content-max-width;
 }
