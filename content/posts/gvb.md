@@ -4,6 +4,8 @@ date: 2024-08-30 03:25:33 +0900
 draft: false
 tags: ["car"]
 isCJKLanguage: true
+images:
+- https://github.com/user-attachments/assets/2ac85deb-c55b-4df3-813f-36c258955222
 ---
 
 WRX STi Spec C GVB 型 (以下GVB) を買いました。前の車 BMW 220 は東京にきた数年前に手放してしまったので久々のマイカーです。
