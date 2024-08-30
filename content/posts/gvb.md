@@ -1,7 +1,7 @@
 ---
 title: "スバル インプレッサ購入"
 date: 2024-08-30 03:25:33 +0900
-draft: true
+draft: false
 tags: ["car"]
 isCJKLanguage: true
 ---
